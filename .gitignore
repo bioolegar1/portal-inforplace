@@ -1,0 +1,28 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+.DS_Store
+
+# Maven
+backend-api/target/
+backend-api/.mvn/
+backend-api/mvnw
+backend-api/mvnw.cmd
+
+# Node
+frontend-web/node_modules/
+frontend-web/dist/
+frontend-web/.angular/
+
+# Environment
+.env
+*.env.local
+
+# Logs
+*.log
+
+# Uploads
+uploads/
+backups/

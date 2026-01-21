@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: portal-inforplace-api
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/portal_inforplace_dev
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: America/Sao_Paulo
+
+  flyway:
+    enabled: false
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:dev-secret-key-minimum-256-bits-required-for-hs256-algorithm}
+    expiration: 86400000
+
+  upload:
+    dir: ${UPLOAD_DIR:./uploads}
+    url-base: ${UPLOAD_URL_BASE:http://localhost:8080/uploads}
+
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:4200,http://localhost:3000}
+
+logging:
+  level:
+    com.inforplace.portal: DEBUG
+    org.springframework.web: DEBUG
+
+server:
+  port: 8080
