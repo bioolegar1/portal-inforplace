@@ -1,7 +1,6 @@
 package com.inforplace.portal.domain.enums;
 
 public enum BlockType {
-
     HEADER,
     TEXT,
     IMAGE,

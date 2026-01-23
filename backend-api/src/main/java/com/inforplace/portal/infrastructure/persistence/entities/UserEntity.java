@@ -36,7 +36,7 @@ public class UserEntity {
 
     @Column(name = "is_active")
     @Builder.Default
-    private Boolean IsActive = true;
+    private Boolean isActive = true;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

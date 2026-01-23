@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ModuleHighlightBlock {
+public class ModuleHighlightBlock implements ContentBlock{
     private String id;
 
     @Builder.Default

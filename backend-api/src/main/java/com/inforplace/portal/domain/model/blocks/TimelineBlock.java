@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TimelineBlock {
+public class TimelineBlock  implements ContentBlock{
     private String id;
 
     @Builder.Default

@@ -14,7 +14,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none  # ⬅️⬅️⬅️ CRÍTICO: DEVE SER "none"
     show-sql: true
     properties:
       hibernate:
@@ -25,6 +25,7 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+    baseline-version: 0
     locations: classpath:db/migration
 
   servlet:
@@ -65,6 +66,7 @@ logging:
   level:
     com.inforplace.portal: DEBUG
     org.springframework.web: DEBUG
+    org.flywaydb: DEBUG  # ⬅️ ADICIONE ISTO para ver logs do Flyway
 
 server:
   port: 8080

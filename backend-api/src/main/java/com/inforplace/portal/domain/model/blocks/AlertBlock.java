@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AlertBlock {
+public class AlertBlock implements ContentBlock{
     private String id;
 
     @Builder.Default

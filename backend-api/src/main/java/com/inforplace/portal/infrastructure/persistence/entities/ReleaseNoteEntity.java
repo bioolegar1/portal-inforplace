@@ -1,7 +1,5 @@
 package com.inforplace.portal.infrastructure.persistence.entities;
 
-
-import com.inforplace.portal.domain.model.blocks.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -10,8 +8,6 @@ import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.hibernate.type.SqlTypes.JSON;
 
 @Entity
 @Table(name = "release_notes")
@@ -36,12 +32,13 @@ public class ReleaseNoteEntity {
     private String slug;
 
     @Column(columnDefinition = "TEXT")
-    private String sumary;
+    private String summary;
 
     @Column(name = "cover_image", length = 500)
     private String coverImage;
 
-    //JSONB - CORE DO SISTEMA
+    // JSONB - CORE DO SISTEMA
+    // Note que removemos o import static e usamos SqlTypes.JSON direto, que já está importado
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "content_blocks", columnDefinition = "jsonb", nullable = false)
     @Builder.Default
@@ -51,9 +48,10 @@ public class ReleaseNoteEntity {
     @Builder.Default
     private Boolean isPublished = false;
 
+    // Correção: Builder.Default é importante aqui se você quiser que o valor padrão seja null explícito,
+    // mas para datas geralmente deixamos sem default a menos que seja "now" na criação.
     @Column(name = "published_at")
-    @Builder.Default
-    private Boolean publishedAt = false;
+    private LocalDateTime publishedAt;
 
     @Column(name = "created_by")
     private Long createdBy;
@@ -78,12 +76,5 @@ public class ReleaseNoteEntity {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
-
-
-
-
-
-
 
 }
