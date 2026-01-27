@@ -1,0 +1,46 @@
+<section
+  [ngClass]="bgClass"
+  class="py-10 md:py-20 text-white relative overflow-hidden">
+
+  <div class="absolute inset-0 bg-black opacity-10 pattern-grid-lg"></div>
+  <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 blur-3xl rounded-full"></div>
+
+  <div class="container mx-auto px-4 relative z-10 mb-2 md:mb-4">
+    <h2 class="text-2xl md:text-3xl font-bold text-center">{{ title }}</h2>
+  </div>
+
+  <swiper-container
+    #swiperRef
+    init="false"
+    class="w-full select-none relative z-10"
+  >
+
+    @for (testim of testimonials(); track $index) {
+      <swiper-slide class="w-[65vw] sm:w-[350px] md:w-[400px]">
+
+        <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 md:p-8 rounded-xl md:rounded-2xl relative
+                transform transition-all duration-300 hover:scale-110 hover:bg-white/20 hover:shadow-2xl hover:z-50
+                w-full flex flex-col cursor-grab active:cursor-grabbing mx-3 md:mx-6">
+
+          <span class="text-3xl md:text-6xl text-[#4ade80] absolute -top-2 -left-1 md:-top-4 md:-left-2 opacity-60 font-serif">"</span>
+
+          <p class="text-xs md:text-lg text-blue-50 mb-3 md:mb-6 relative z-10 italic flex-grow leading-relaxed">
+            {{ testim.text }}
+          </p>
+
+          <div class="flex items-center gap-3 md:gap-4 border-t border-white/10 pt-3 md:pt-4 mt-auto">
+            <div class="w-8 h-8 md:w-10 md:h-10 bg-white text-gray-900 rounded-full flex items-center justify-center font-bold text-sm md:text-lg shadow-lg shrink-0">
+              {{ testim.name.charAt(0) }}
+            </div>
+            <div>
+              <h4 class="font-bold text-white text-xs md:text-base">{{ testim.name }}</h4>
+              <p class="text-[10px] md:text-xs text-[#4ade80] uppercase tracking-wide font-bold">{{ testim.company }}</p>
+            </div>
+          </div>
+        </div>
+
+      </swiper-slide>
+    }
+
+  </swiper-container>
+</section>

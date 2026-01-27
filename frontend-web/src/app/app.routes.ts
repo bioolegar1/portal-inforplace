@@ -3,6 +3,7 @@ import {HomeComponent} from './features/public/home.component';
 import {ReleaseHubComponent} from './features/public/release-hub/release-hub.component';
 import {ReleaseDetailComponent} from './features/public/components/release-detail/release-detail.component';
 import {PillarComponent} from './features/public/solutions/pillar/pillar.component';
+import {SafeComponent} from './features/public/solutions/safe/safe.component';
 
 // Seus imports
 
@@ -33,6 +34,12 @@ export const routes: Routes = [
     path: 'pillar',
     component: PillarComponent,
     title: 'Sistema Pillar - Gestão de Obras'
+  },
+
+  {
+    path: 'safe',
+    component: SafeComponent,
+    title: 'Sistema Safe - Gestão Administrativa'
   },
 
   // Rota coringa
