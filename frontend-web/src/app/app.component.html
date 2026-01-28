@@ -1,3 +1,8 @@
 <app-header/>
 <router-outlet />
-<app-footer/>
+
+@defer (on viewport) {
+  <app-footer></app-footer>
+} @placeholder {
+  <div class="h-20 bg-gray-900"></div>
+}

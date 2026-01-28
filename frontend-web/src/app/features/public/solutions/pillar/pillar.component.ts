@@ -1,7 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 // 1. Importe o componente novo (Ajuste o caminho se sua pasta for diferente)
+import { TestimonialsComponent } from '../../../../core/layout/testmonials/testmonials.component';
 
 // Interface do FAQ
 interface FaqItem {
@@ -13,8 +14,9 @@ interface FaqItem {
 @Component({
   selector: 'app-pillar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   // 2. Adicione o TestimonialsComponent nos imports
-  imports: [CommonModule],
+  imports: [CommonModule, TestimonialsComponent],
   templateUrl: './pillar.component.html',
   styles: [] // 3. CSS do Swiper removido (já está dentro do componente filho)
 })

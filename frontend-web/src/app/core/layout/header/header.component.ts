@@ -1,18 +1,23 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-
+import { RouterLink } from '@angular/router'; // <--- Removi o RouterLinkActive daqui
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush, // <--- ADICIONE ISSO
+  imports: [CommonModule, RouterLink, ], // <--- Removi daqui também
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {
 
-  // Lista de Soluções (já existente)
+  // 1. Estado do Menu Mobile (Signals)
+  isMobileMenuOpen = signal(false);
+  isMobileSolutionsOpen = signal(false);
+
+  // 2. Dados do Menu (Signals)
   solutionsMenu = signal([
     { name: 'Sistema Pillar', icon: 'pillar42x42.png', link: '/pillar' },
+    { name: 'Pillar REMOTO', icon: 'pillar42x42.png', link: '/pillar-remoto' },
     { name: 'Sistema SAFE', icon: 'safe.png', link: '/safe' },
     { name: 'Custo de Obras', icon: 'custodeobras.png', link: '/obras' },
     { name: 'PDV - Ponto de Venda', icon: 'pvinfo.png', link: '/pdv' },
@@ -20,25 +25,15 @@ export class HeaderComponent {
     { name: 'Coletor XML', icon: 'Coletorxml.png', link: '/coletor' }
   ]);
 
-  // --- NOVA LÓGICA DO MENU MOBILE ---
-
-  // 1. Controle se o menu principal está aberto
-  isMobileMenuOpen = signal(false);
-
-  // 2. Controle se o submenu "Soluções" dentro do mobile está aberto
-  isMobileSolutionsOpen = signal(false);
-
-  // Alterna o menu principal
+  // 3. Funções de Controle
   toggleMobileMenu() {
-    this.isMobileMenuOpen.update(v => !v);
+    this.isMobileMenuOpen.update(value => !value);
   }
 
-  // Alterna o submenu de soluções no mobile
   toggleMobileSolutions() {
-    this.isMobileSolutionsOpen.update(v => !v);
+    this.isMobileSolutionsOpen.update(value => !value);
   }
 
-  // Fecha tudo (usado ao clicar em um link)
   closeMenu() {
     this.isMobileMenuOpen.set(false);
     this.isMobileSolutionsOpen.set(false);

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -6,7 +6,8 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-release-hub',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, RouterLink, FormsModule ],
   templateUrl: './release-hub.component.html', // Aponta para o HTML do release-hub
   styleUrl: './release-hub.component.css'
 })

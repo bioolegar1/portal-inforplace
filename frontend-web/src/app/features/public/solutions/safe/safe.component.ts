@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 // 1. Import do componente de depoimentos
@@ -14,6 +14,7 @@ interface FaqItem {
 @Component({
   selector: 'app-safe',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   // 2. Adicionamos o TestimonialsComponent aqui
   imports: [CommonModule, TestimonialsComponent],
   templateUrl: './safe.component.html',

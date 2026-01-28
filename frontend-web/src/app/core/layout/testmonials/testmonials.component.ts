@@ -7,7 +7,7 @@ import {
   AfterViewInit,
   Inject,
   PLATFORM_ID,
-  Input
+  Input, ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { register } from 'swiper/element/bundle';
@@ -17,6 +17,7 @@ register();
 @Component({
   selector: 'app-testimonials',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush, // <--- ADICIONE ISSO
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [CommonModule],
   templateUrl: './testmonials.component.html',

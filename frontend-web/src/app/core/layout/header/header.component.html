@@ -2,12 +2,8 @@
   <div class="container mx-auto px-4 h-20 flex items-center justify-between">
 
     <a routerLink="/" (click)="closeMenu()" class="flex items-center gap-2 group shrink-0" aria-label="Inforplace Sistemas - Home">
-      <div class="w-10 h-10 bg-white rounded-lg text-[#16a34a] flex items-center justify-center text-2xl font-bold shadow-md group-hover:scale-105 transition-transform">
-        i
-      </div>
-      <div class="flex flex-col">
-        <span class="text-xl font-extrabold tracking-tight leading-none">Inforplace</span>
-        <span class="text-[10px] font-semibold opacity-90 uppercase tracking-widest leading-none">Sistemas</span>
+      <div>
+        <img src="assets/img/logo-solucoes/logoinforplacebranca.png" alt="Inforplace Sistemas" class="h-16 md:h-12 w-auto object-contain" priority>
       </div>
     </a>
 
@@ -19,6 +15,7 @@
           Soluções
           <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </a>
+
         <div class="absolute top-full left-0 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 z-50">
           <div class="p-2 grid gap-1">
             @for (item of solutionsMenu(); track item.name) {

@@ -1,3 +1,8 @@
+/* Importação de Fontes com display swap para evitar bloqueio */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/* Se usar Material Symbols, descomente a linha abaixo e garanta o display=swap */
+/* @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap'); */
+
 /* Tailwind Base */
 @tailwind base;
 @tailwind components;
@@ -20,20 +25,40 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Melhora a rolagem */
+  overflow-y: scroll;
 }
 
-/* Animações Customizadas */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+/* =========================================
+   OTIMIZAÇÕES DE PERFORMANCE (CORE WEB VITALS)
+   ========================================= */
+
+/* 1. ISOLAMENTO DE LAYOUT DO SWIPER (CLS & Reflow) */
+/* Essencial para que o navegador saiba o tamanho antes do JS carregar */
+swiper-container {
+  display: block;
+  width: 100%;
+  height: 480px; /* Altura Mobile Fixa */
+
+  /* 'strict' diz ao navegador: "O que acontece aqui dentro não afeta o layout de fora" */
+  contain: strict;
+}
+
+@media (min-width: 768px) {
+  swiper-container {
+    height: 580px; /* Altura Desktop Fixa */
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-in-out;
+/* 2. RENDERIZAÇÃO INTELIGENTE (Content Visibility) */
+/* O navegador pula o cálculo de layout destas seções até o usuário rolar perto delas.
+   Isso reduz drasticamente o "Total Blocking Time" e "Reflows". */
+#institucional,
+#solucoes,
+app-latest-updates,
+app-cta-contact {
+  content-visibility: auto;
+  /* Fornece uma altura estimada para a barra de rolagem não pular.
+     1px de largura e aprox 600px de altura */
+  contain-intrinsic-size: 1px 600px;
 }

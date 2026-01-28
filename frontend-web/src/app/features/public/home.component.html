@@ -13,86 +13,121 @@
         init="false"
         class="w-full h-[480px] md:h-[580px]"
       >
-        @for (solution of solutions(); track solution.id) {
+        @for (solution of solutions(); track solution.id; let isFirst = $first) {
           <swiper-slide>
             <div
               [ngClass]="getHeroTheme(solution.id).bg"
               class="relative w-full h-full flex items-center text-white overflow-hidden">
 
-              <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+              <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-white opacity-5 blur-[120px] rounded-full pointer-events-none"></div>
 
               <div class="container mx-auto px-4 relative z-10 h-full flex items-center justify-center">
 
-                <div class="grid md:grid-cols-2 gap-4 md:gap-12 items-center w-full">
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center w-full">
 
-                  <div class="text-center md:text-left order-2 md:order-1 flex flex-col justify-center">
+                  <div class="text-center md:text-left order-2 md:order-1 flex flex-col justify-center z-20">
 
                     <div>
-                  <span class="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-[10px] md:text-xs font-bold uppercase tracking-wider mb-3 backdrop-blur-sm">
+                  <span class="inline-block py-1.5 px-4 rounded-full bg-white/10 border border-white/20 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4 backdrop-blur-md shadow-lg">
                      Solução Inforplace
                   </span>
                     </div>
 
-                    <h1 class="text-2xl md:text-4xl lg:text-5xl font-extrabold mb-3 leading-tight flex flex-col md:flex-row items-center md:items-start gap-3 justify-center md:justify-start">
-                      <img [src]="'assets/img/logo-solucoes/' + solution.icon" alt="" class="w-10 h-10 md:w-12 md:h-12 object-contain bg-white/90 rounded-lg p-1 shadow-lg">
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight flex flex-col md:flex-row items-center md:items-start gap-4 justify-center md:justify-start drop-shadow-lg">
+                      <div class="relative group">
+                        <div class="absolute inset-0 bg-white/20 rounded-xl blur-lg group-hover:blur-xl transition-all"></div>
+                        <img
+                          [ngSrc]="'assets/img/logo-solucoes/' + solution.icon"
+                          width="48"
+                          height="48"
+                          [priority]="isFirst"
+                          class="relative w-12 h-12 md:w-14 md:h-14 object-contain bg-white/95 rounded-xl p-1.5 shadow-xl transform group-hover:scale-110 transition-transform duration-300"
+                          alt="">
+                      </div>
                       <span>{{ solution.name }}</span>
                     </h1>
 
-                    <p class="text-sm md:text-lg text-white/90 mb-6 max-w-lg mx-auto md:mx-0 leading-relaxed font-medium line-clamp-3 md:line-clamp-none">
+                    <p class="text-sm md:text-lg text-blue-50/90 mb-8 max-w-lg mx-auto md:mx-0 leading-relaxed font-medium line-clamp-3 md:line-clamp-none">
                       {{ solution.description }}
                     </p>
 
-                    <div class="flex justify-center md:justify-start">
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
                       @if (solution.id === 'pillar') {
                         <a routerLink="/pillar"
                            [ngClass]="getHeroTheme(solution.id).btn"
-                           class="px-6 py-3 md:px-8 md:py-3.5 rounded-xl font-bold transition-all shadow-lg hover:scale-105 hover:shadow-xl inline-flex items-center gap-2 text-sm md:text-base">
+                           class="px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg hover:shadow-2xl hover:-translate-y-1 inline-flex items-center justify-center gap-2 text-sm md:text-base border border-white/20">
                           Conhecer o Pillar
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                          <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
                       } @else if (solution.id === 'safe') {
                         <a routerLink="/safe"
                            [ngClass]="getHeroTheme(solution.id).btn"
-                           class="px-6 py-3 md:px-8 md:py-3.5 rounded-xl font-bold transition-all shadow-lg hover:scale-105 hover:shadow-xl inline-flex items-center gap-2 text-sm md:text-base">
+                           class="px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg hover:shadow-2xl hover:-translate-y-1 inline-flex items-center justify-center gap-2 text-sm md:text-base border border-white/20">
                           Conhecer o SAFE
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                          <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </a>
-                      }
-
-                      @else {
+                      } @else {
                         <a href="#solucoes"
                            [ngClass]="getHeroTheme(solution.id).btn"
-                           class="px-6 py-3 md:px-8 md:py-3.5 rounded-xl font-bold transition-all shadow-lg hover:scale-105 hover:shadow-xl inline-flex items-center gap-2 text-sm md:text-base">
+                           class="px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg hover:shadow-2xl hover:-translate-y-1 inline-flex items-center justify-center gap-2 text-sm md:text-base border border-white/20">
                           Saiba Mais
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                          <span class="material-symbols-outlined text-lg">arrow_downward</span>
                         </a>
                       }
                     </div>
                   </div>
 
+                  <div class="order-1 md:order-2 hidden md:flex relative h-[400px] w-full items-center justify-center perspective-1000">
 
-                  <div class="order-1 md:order-2 hidden md:flex justify-center items-center gap-6">
-
-                    <div
-                      [ngClass]="getHeroTheme(solution.id).imgPanel"
-                      class="relative w-full max-w-sm aspect-[16/9] md:aspect-auto md:h-[350px] rounded-2xl border-4 border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden shadow-2xl flex items-center justify-center group transition-all duration-500 ease-out hover:scale-[1.3] hover:z-50 hover:shadow-3xl cursor-pointer">
-
-                      <div class="text-center p-4 transition-transform duration-500 group-hover:scale-90">
-                        <span class="material-symbols-outlined text-5xl md:text-7xl opacity-30 mb-2 group-hover:opacity-100 transition-opacity">image</span>
-                        <p class="text-white/50 font-bold uppercase tracking-widest text-xs group-hover:text-white transition-colors">Imagem do<br>{{ solution.name }}</p>
+                    <div [ngClass]="getHeroTheme(solution.id).imgPanel"
+                         class="absolute top-10 right-0 w-[300px] h-[200px] rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl rotate-6 opacity-60 z-0 transition-colors duration-500">
+                      <div class="h-6 w-full border-b border-white/10 flex items-center px-3 gap-1.5">
+                        <div class="w-2 h-2 rounded-full bg-white/20"></div>
+                        <div class="w-2 h-2 rounded-full bg-white/20"></div>
+                      </div>
+                      <div class="p-4 space-y-2 opacity-30">
+                        <div class="h-2 w-full bg-white rounded"></div>
+                        <div class="h-2 w-2/3 bg-white rounded"></div>
+                        <div class="h-2 w-full bg-white rounded"></div>
                       </div>
                     </div>
 
-                    <div
-                      [ngClass]="getHeroTheme(solution.id).imgPanel"
-                      class="relative w-full max-w-sm aspect-[16/9] md:aspect-auto md:h-[350px] rounded-2xl border-4 border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden shadow-2xl flex items-center justify-center group transition-all duration-500 ease-out hover:scale-[1.3] hover:z-50 hover:shadow-3xl cursor-pointer">
+                    <div [ngClass]="getHeroTheme(solution.id).imgPanel"
+                         class="relative w-[450px] aspect-[16/10] rounded-xl border border-white/20 bg-gray-900/90 backdrop-blur-md shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-10 flex flex-col overflow-hidden group hover:scale-150 transition-all duration-500">
 
-                      <div class="text-center p-4 transition-transform duration-500 group-hover:scale-90">
-                        <span class="material-symbols-outlined text-5xl md:text-7xl opacity-30 mb-2 group-hover:opacity-100 transition-opacity">image</span>
-                        <p class="text-white/50 font-bold uppercase tracking-widest text-xs group-hover:text-white transition-colors">Imagem do<br>{{ solution.name }}</p>
+                      <div class="h-8 w-full bg-white/5 border-b border-white/10 flex items-center justify-between shrink-0 select-none">
+
+                        <div class="flex items-center gap-2 px-3 py-1 h-full">
+                          <div class="w-3 h-3 bg-blue-500/80 rounded-[2px]"></div>
+                          <span class="text-[11px] text-white/50 font-medium tracking-wide">INFORPLACE SISTEMAS</span>
+                        </div>
+
+                        <div class="flex h-full items-center text-white/40">
+                          <div class="h-full w-11 flex items-center justify-center hover:bg-white/10 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+                          </div>
+                          <div class="h-full w-11 flex items-center justify-center hover:bg-white/10 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                          </div>
+                          <div class="h-full w-11 flex items-center justify-center hover:bg-[#e81123] hover:text-white transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                          </div>
+                        </div>
+
                       </div>
-                    </div>
 
+                      <div class="relative flex-1 w-full bg-gray-800 overflow-hidden">
+                        <img
+                          [ngSrc]="'assets/img/screens/' + solution.print"
+                          fill
+                          [priority]="isFirst"
+                          alt="Tela do {{ solution.name }}"
+                          class="object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                      </div>
+
+                    </div>
                   </div>
 
                 </div>
@@ -102,28 +137,26 @@
         }
       </swiper-container>
 
-      <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 animate-bounce z-20 pointer-events-none hidden md:block">
-        <div class="text-white/70 bg-black/20 p-2 rounded-full backdrop-blur-md">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 pointer-events-none hidden md:block animate-bounce">
+        <div class="text-white/50 bg-white/5 p-2 rounded-full backdrop-blur-sm border border-white/10">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7-7-7m14-8l-7 7-7-7"></path></svg>
         </div>
       </div>
     </section>
 
-
     <section id="institucional" class="relative py-10 md:py-20 bg-white">
       <div class="container mx-auto px-4">
         <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
-
           <div class="order-2 md:order-1">
-            <div class="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center relative overflow-hidden shadow-inner border border-gray-200">
-              <img
-                src="assets/img/inforplace.jpg"
-                alt="Foto da Equipe / Prédio da Inforplace"
-                class="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-              >
+            <div class="aspect-video bg-gray-100 rounded-2xl flex items-center justify-center relative overflow-hidden shadow-inner border border-gray-200">              <img
+                ngSrc="assets/img/inforplace.avif"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 50vw"
+                alt="Foto da Equipe"
+                class="object-cover transform hover:scale-105 transition-transform duration-700"              >
             </div>
           </div>
-
           <div class="order-1 md:order-2">
             <span class="text-[#16a34a] font-bold uppercase tracking-wider text-xs md:text-sm">Institucional</span>
             <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6 mt-2">Sobre Nós</h2>
@@ -131,20 +164,13 @@
               A Inforplace Sistemas atua no mercado de tecnologia proporcionando eficiência e resultado. O segredo dos bons resultados de uma empresa está na eficiência.
             </p>
             <p class="text-gray-600 mb-6 leading-relaxed text-sm md:text-base">
-              Nossas ferramentas são desenvolvidas para garantir que sua gestão contábil, fiscal e administrativa opere em harmonia, com atendimento especializado e suporte que entende sua necessidade.
+              Nossas ferramentas são desenvolvidas para garantir que sua gestão contábil, fiscal e administrativa opere em harmonia.
             </p>
-
             <a href="#fale-conosco" class="text-[#16a34a] font-bold hover:underline flex items-center gap-2 text-sm md:text-base">
               Conheça nossa história <span>&rarr;</span>
             </a>
           </div>
         </div>
-      </div>
-
-      <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <a href="#solucoes" class="text-gray-300 hover:text-[#16a34a] transition-colors" aria-label="Ir para Soluções">
-          <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-        </a>
       </div>
     </section>
 
@@ -156,97 +182,72 @@
           <div class="w-16 md:w-20 h-1 bg-[#16a34a] mx-auto rounded-full"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 max-w-6xl mx-auto">
-          @for (solution of solutions(); track solution.id) {
-
-            <article
-              [ngClass]="getCardTheme(solution.id).card"
-              class="bg-white rounded-xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 group h-full flex flex-col text-left">
-
-              <div class="flex items-center gap-3 mb-3">
-
-                <div
-                  [ngClass]="getCardTheme(solution.id).iconBg"
-                  class="w-12 h-12 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0 p-2">
-                  <img
-                    [src]="'assets/img/logo-solucoes/' + solution.icon"
-                    [alt]="'Ícone do ' + solution.name"
-                    class="w-full h-full object-contain"
-                    loading="lazy"
-                  >
+        @defer (on viewport) {
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 max-w-6xl mx-auto">
+            @for (solution of solutions(); track solution.id) {
+              <article
+                [ngClass]="getCardTheme(solution.id).card"
+                class="bg-white rounded-xl p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 group h-full flex flex-col text-left will-change-transform">
+                <div class="flex items-center gap-3 mb-3">
+                  <div
+                    [ngClass]="getCardTheme(solution.id).iconBg"
+                    class="w-12 h-12 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0 p-2">
+                    <img
+                      [ngSrc]="'assets/img/logo-solucoes/' + solution.icon"
+                      width="48"
+                      height="48"
+                      loading="lazy"
+                      alt=""
+                      class="w-full h-full object-contain"
+                    >
+                  </div>
+                  <h3 [ngClass]="getCardTheme(solution.id).title" class="text-lg md:text-xl font-bold text-gray-900 transition-colors leading-tight">{{ solution.name }}</h3>
                 </div>
-
-                <h3
-                  [ngClass]="getCardTheme(solution.id).title"
-                  class="text-lg md:text-xl font-bold text-gray-900 transition-colors leading-tight">
-                  {{ solution.name }}
-                </h3>
+                <p [ngClass]="getCardTheme(solution.id).text" class="text-gray-600 text-sm leading-snug mb-4 h-[85px] line-clamp-4 transition-colors">{{ solution.description }}</p>
+                <div class="mt-auto w-full">
+                  @if (solution.id === 'pillar') {
+                    <a routerLink="/pillar" [ngClass]="getHeroTheme(solution.id).btn" class="w-full justify-center px-4 py-2.5 rounded-lg font-bold transition-all shadow-md hover:scale-[1.02] inline-flex items-center gap-2 text-sm">Conhecer o Pillar <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+                  } @else if (solution.id === 'safe') {
+                    <a routerLink="/safe" [ngClass]="getHeroTheme(solution.id).btn" class="w-full justify-center px-4 py-2.5 rounded-lg font-bold transition-all shadow-md hover:scale-[1.02] inline-flex items-center gap-2 text-sm">Conhecer o SAFE <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+                  } @else {
+                    <a href="#solucoes" [ngClass]="getHeroTheme(solution.id).btn" class="w-full justify-center px-4 py-2.5 rounded-lg font-bold transition-all shadow-md hover:scale-[1.02] inline-flex items-center gap-2 text-sm">Saiba Mais <span class="material-symbols-outlined text-sm">expand_more</span></a>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        } @placeholder {
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 max-w-6xl mx-auto">
+            @for (i of [1,2,3,4,5,6]; track i) {
+              <div class="bg-white rounded-xl p-5 border border-gray-200 h-full flex flex-col">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-12 h-12 rounded-lg bg-gray-200 animate-pulse"></div>
+                  <div class="h-6 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                </div>
+                <div class="space-y-2 mb-4 h-[85px]">
+                  <div class="h-3 bg-gray-100 rounded w-full animate-pulse"></div>
+                  <div class="h-3 bg-gray-100 rounded w-full animate-pulse"></div>
+                  <div class="h-3 bg-gray-100 rounded w-3/4 animate-pulse"></div>
+                </div>
+                <div class="mt-auto w-full h-10 bg-gray-200 rounded-lg animate-pulse"></div>
               </div>
-
-              <p
-                [ngClass]="getCardTheme(solution.id).text"
-                class="text-gray-600 text-sm leading-snug mb-4 h-auto md:h-[60px] line-clamp-3 transition-colors">
-                {{ solution.description }}
-              </p>
-
-              <div class="mt-auto w-full">
-                @if (solution.id === 'pillar') {
-                  <a routerLink="/pillar"
-                     [ngClass]="getHeroTheme(solution.id).btn"
-                     class="w-full justify-center px-4 py-2.5 rounded-lg font-bold transition-all shadow-md hover:scale-[1.02] hover:shadow-lg inline-flex items-center gap-2 text-sm">
-                    Conhecer o Pillar
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                  </a>
-                }
-
-                @else if (solution.id === 'gestao') {
-                  <a routerLink="/safe"
-                     [ngClass]="getHeroTheme(solution.id).btn"
-                     class="w-full justify-center px-4 py-2.5 rounded-lg font-bold transition-all shadow-md hover:scale-[1.02] hover:shadow-lg inline-flex items-center gap-2 text-sm cursor-pointer">
-                    Conhecer o SAFE
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                  </a>
-                }
-
-                @else {
-                  <a href="#solucoes"
-                     [ngClass]="getHeroTheme(solution.id).btn"
-                     class="w-full justify-center px-4 py-2.5 rounded-lg font-bold transition-all shadow-md hover:scale-[1.02] hover:shadow-lg inline-flex items-center gap-2 text-sm">
-                    Saiba Mais
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                  </a>
-                }
-              </div>
-            </article>
-          }
-        </div>
-      </div>
-
-      <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <a href="#fale-conosco" class="text-gray-400 hover:text-[#16a34a] transition-colors" aria-label="Ir para Fale Conosco">
-          <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-        </a>
+            }
+          </div>
+        }
       </div>
     </section>
 
+    @defer (on viewport) {
+      <app-latest-updates></app-latest-updates>
+    } @placeholder {
+      <div class="h-[400px] bg-gray-50 animate-pulse"></div>
+    }
 
-    <section id="fale-conosco" class="py-12 md:py-20 bg-[#16a34a] text-white relative overflow-hidden">
-      <div class="absolute inset-0 bg-black opacity-10 pattern-grid-lg"></div>
-      <div class="container mx-auto px-4 relative z-10 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold mb-4 md:mb-6">Precisa de Atendimento?</h2>
-        <p class="text-green-50 text-base md:text-lg mb-8 md:mb-10 max-w-2xl mx-auto">
-          Nossa equipe de suporte está pronta para resolver suas dúvidas e garantir que sua empresa não pare.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
-          <a href="https://wa.me/556232851464" target="_blank" class="w-full sm:w-auto bg-white text-[#16a34a] px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-colors shadow-lg flex items-center justify-center gap-2">
-            <span>📱</span> Falar no WhatsApp
-          </a>
-          <a href="mailto:contato@inforplace.com.br" class="w-full sm:w-auto bg-green-700 text-white border border-green-600 px-8 py-4 rounded-xl font-bold hover:bg-green-800 transition-colors flex items-center justify-center gap-2">
-            <span>📧</span> Enviar E-mail
-          </a>
-        </div>
-      </div>
-    </section>
+    @defer (on viewport) {
+      <app-cta-contact></app-cta-contact>
+    } @placeholder {
+      <div class="h-[300px] bg-blue-900 animate-pulse"></div>
+    }
 
   </main>
 </div>
