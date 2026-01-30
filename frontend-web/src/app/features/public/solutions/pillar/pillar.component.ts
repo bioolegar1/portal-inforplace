@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 // 1. Importe o componente novo (Ajuste o caminho se sua pasta for diferente)
 import { TestimonialsComponent } from '../../../../core/layout/testmonials/testmonials.component';
+import {CtaContactComponent} from '../../../../core/layout/cta-contact/cta-contact.component';
+import {LatestUpdatesComponent} from '../../components/latest-updates/latest-updates.component';
+import {FaqAccordionComponent, FaqItem} from '../../../../core/layout/faq-accordion/faq-accordion.component';
+import {SolutionFeaturesComponent} from '../../../../core/layout/solution-features/solution-features.component';
 
 // Interface do FAQ
-interface FaqItem {
-  question: string;
-  answer: string;
-  isOpen: boolean;
+interface FeatureItem {
+  title: string;
+  desc: string;
+  icon: string;
 }
 
 @Component({
@@ -16,15 +20,27 @@ interface FaqItem {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   // 2. Adicione o TestimonialsComponent nos imports
-  imports: [CommonModule, TestimonialsComponent],
+  imports: [CommonModule, TestimonialsComponent, CtaContactComponent, LatestUpdatesComponent, FaqAccordionComponent, SolutionFeaturesComponent],
   templateUrl: './pillar.component.html',
-  styles: [] // 3. CSS do Swiper removido (já está dentro do componente filho)
 })
 export class PillarComponent implements OnInit {
 
+  constructor(private title: Title, private meta: Meta) {}
+  ngOnInit(): void {
+    this.title.setTitle('Sistema Pillar - Gestão para Construtoras | Inforplace');
+    this.meta.updateTag({ name: 'description', content: 'O Sistema Pillar inova a administração da sua construtora. Controle de obras, financeiro e compras integrado.' });
+  }
+
+
+  activeAccordion = signal<number | null>(null);
+  toggleAccordion(index: number) {
+    this.activeAccordion.update(current => current === index ? null : index);
+  }
+
   // Features (Mantido)
-  features = signal([
-    { title: 'Compra', desc: 'Realiza solicitação de compra, cotação de preço e ordem de compra.', icon: 'shopping_cart' },
+  features = signal<FeatureItem[]>([
+    {
+      title: 'Compra', desc: 'Realiza solicitação de compra, cotação de preço e ordem de compra.', icon: 'shopping_cart' },
     { title: 'Estoque', desc: 'Controla as entradas e saídas de mercadoria aplicada na obra.', icon: 'inventory_2' },
     { title: 'Contábil', desc: 'Maior conforto, segurança e agilidade na integração do Sistema Contábil.', icon: 'calculate' },
     { title: 'Planejamento de Obra', desc: 'Controla todos elementos de receita de venda por período e acumulada.', icon: 'architecture' },
@@ -35,57 +51,27 @@ export class PillarComponent implements OnInit {
     { title: 'Gestão de Clientes', desc: 'Sistema completo para construtoras, incorporadoras e administradoras.', icon: 'groups' }
   ]);
 
-  // OBS: Removi a variável 'testimonials' pois ela agora vive dentro do <app-testimonials>
 
-  // FAQ (Mantido)
   faqs = signal<FaqItem[]>([
     {
       question: 'O que é o planejamento de obra?',
       answer: 'É o módulo onde você define o cronograma físico-financeiro, controlando etapas, custos previstos e realizados para garantir a saúde financeira do empreendimento.',
-      isOpen: false
     },
     {
       question: 'Como faço para acessar o sistema remotamente?',
       answer: 'O Pillar permite acesso remoto seguro via TS (Terminal Service) ou VPN, garantindo que você gerencie suas obras de qualquer lugar.',
-      isOpen: false
     },
     {
       question: 'Quantas empresas posso ter no meu sistema?',
       answer: 'O sistema é multiempresa. Você pode gerenciar múltiplas obras e CNPJs diferentes dentro da mesma licença, conforme seu plano.',
-      isOpen: false
     },
     {
       question: 'Quais clientes podem utilizar o Pillar?',
       answer: 'Construtoras, Incorporadoras, Empreiteiras e Administradoras de Carteira Imobiliária que buscam gestão profissional.',
-      isOpen: false
     },
     {
       question: 'Qual o custo mensal do Pillar?',
       answer: 'Nós da Inforplace mantemos a política de preço conforme o número de usuários e quantidade de empresas. Nosso preço é competitivo e oferecemos atendimento personalizado.',
-      isOpen: true
     }
   ]);
-
-  constructor(
-    private meta: Meta,
-    private title: Title
-  ) {}
-
-  ngOnInit(): void {
-    this.title.setTitle('Sistema Pillar - Gestão para Construtoras | Inforplace');
-    this.meta.updateTag({ name: 'description', content: 'O Sistema Pillar inova a administração da sua construtora. Controle de obras, financeiro e compras integrado.' });
-  }
-
-  // OBS: Removi ngAfterViewInit pois a lógica do Swiper agora é responsabilidade do componente filho
-
-  toggleFaq(index: number) {
-    this.faqs.update(items => {
-      const updatedItems = [...items];
-      updatedItems[index] = {
-        ...updatedItems[index],
-        isOpen: !updatedItems[index].isOpen
-      };
-      return updatedItems;
-    });
-  }
 }

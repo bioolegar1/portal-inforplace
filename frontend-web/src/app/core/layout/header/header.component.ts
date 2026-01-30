@@ -20,9 +20,9 @@ export class HeaderComponent {
     { name: 'Pillar REMOTO', icon: 'pillar42x42.png', link: '/pillar-remoto' },
     { name: 'Sistema SAFE', icon: 'safe.png', link: '/safe' },
     { name: 'Custo de Obras', icon: 'custodeobras.png', link: '/obras' },
-    { name: 'PDV - Ponto de Venda', icon: 'pvinfo.png', link: '/pdv' },
-    { name: 'Emissor NF-e', icon: 'sao.png', link: '/nfe' },
-    { name: 'Coletor XML', icon: 'Coletorxml.png', link: '/coletor' }
+    { name: 'PDV - Ponto de Venda', icon: 'pvinfo.png', link: '/pvinfo' },
+    { name: 'Emissor NF-e', icon: 'sao.png', link: '/notainfo' },
+    { name: 'Coletor XML', icon: 'Coletorxml.png', link: '/coletorxml' }
   ]);
 
   // 3. Funções de Controle

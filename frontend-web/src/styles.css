@@ -28,7 +28,16 @@ body {
   /* Melhora a rolagem */
   overflow-y: scroll;
 }
+css/* Scroll suave globalmente */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 120px;
+}
 
+/* Melhora a performance do scroll */
+* {
+  scroll-margin-top: 100px;
+}
 /* =========================================
    OTIMIZAÇÕES DE PERFORMANCE (CORE WEB VITALS)
    ========================================= */

@@ -60,84 +60,24 @@
       </div>
     </section>
 
-    <section class="py-10 md:py-20 bg-slate-200" id="funcionalidades">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-8 md:mb-16">
-          <span class="text-[#16a34a] font-bold uppercase tracking-wider text-xs md:text-sm">O que o sistema faz?</span>
-          <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-2 mb-4">Funcionalidades Poderosas</h2>
-          <div class="w-16 md:w-20 h-1 bg-gradient-to-r from-[#1e40af] to-[#16a34a] mx-auto rounded-full"></div>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
-          @for (feature of features(); track feature.title) {
-            <div class="group p-3 md:p-6 rounded-xl md:rounded-2xl border border-gray-100 bg-gray-50 hover:bg-white hover:shadow-xl transition-all duration-300 relative overflow-hidden">
-              <div class="absolute top-0 left-0 w-full h-1 bg-[#16a34a] transform -translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-
-              <div class="w-8 h-8 md:w-12 md:h-12 bg-white rounded-lg md:rounded-xl shadow-sm flex items-center justify-center text-[#1e40af] mb-2 md:mb-4 group-hover:bg-[#16a34a] group-hover:text-white transition-colors duration-300">
-                <span class="material-symbols-outlined text-lg md:text-2xl">{{ feature.icon }}</span>
-              </div>
-
-              <h3 class="text-sm md:text-xl font-bold text-gray-900 mb-1 md:mb-2 group-hover:text-[#1e40af] transition-colors leading-tight">{{ feature.title }}</h3>
-
-              <p class="text-gray-600 text-[10px] md:text-sm leading-snug line-clamp-4 md:line-clamp-none">
-                {{ feature.desc }}
-              </p>
-            </div>
-          }
-        </div>
-      </div>
-    </section>
-
-    <app-testimonials
-      title="O que dizem sobre o Pillar"
-      bgClass="bg-[#1e40af]"> </app-testimonials>
+    <app-solution-features [features]="features()" color="blue" />
+    <app-faq-accordion [data]="faqs()" color="sky" />
+    <app-testimonials  title="Clientes que confiam na Inforplace" color="sky"/>
 
 
-    <section class="py-10 md:py-20 bg-gray-50">
-      <div class="container mx-auto px-4 max-w-3xl">
-        <div class="text-center mb-8 md:mb-12">
-          <span class="text-[#16a34a] font-bold uppercase tracking-wider text-xs md:text-sm">Tire suas dúvidas</span>
-          <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-2">Perguntas & Respostas</h2>
-        </div>
 
-        <div class="space-y-3 md:space-y-4">
-          @for (faq of faqs(); track faq.question; let i = $index) {
-            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm transition-all hover:shadow-md hover:border-blue-200">
-              <button
-                (click)="toggleFaq(i)"
-                class="w-full flex items-center justify-between p-4 md:p-5 text-left focus:outline-none bg-white"
-                [attr.aria-expanded]="faq.isOpen">
-                <span class="font-bold text-gray-800 text-sm md:text-base group-hover:text-[#1e40af]">{{ faq.question }}</span>
-                <span class="material-symbols-outlined text-[#16a34a] transition-transform duration-300"
-                      [class.rotate-180]="faq.isOpen">
-                  expand_more
-                </span>
-              </button>
 
-              @if (faq.isOpen) {
-                <div class="p-4 md:p-5 pt-0 text-gray-600 bg-white animate-fade-in-down text-sm md:text-base">
-                  <p class="border-l-4 border-[#16a34a] pl-4 bg-gray-50 p-3 rounded-r-lg">
-                    {{ faq.answer }}
-                  </p>
-                </div>
-              }
-            </div>
-          }
-        </div>
-      </div>
-    </section>
+    @defer (on viewport) {
+      <app-latest-updates></app-latest-updates>
+    } @placeholder {
+      <div class="h-[400px] bg-gray-50 animate-pulse"></div>
+    }
 
-    <section class="py-12 md:py-20 bg-white text-center">
-      <div class="container mx-auto px-4">
-        <h2 class="text-2xl md:text-4xl font-bold text-gray-900 mb-4 md:mb-6">Pronto para transformar sua gestão?</h2>
-        <p class="text-sm md:text-xl text-gray-600 mb-6 md:mb-8 max-w-2xl mx-auto">
-          Entre em contato com a Inforplace, teremos o maior prazer em atendê-lo e lhe assessorar com o Pillar.
-        </p>
-        <a href="https://wa.me/556232851464" target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-[#1e40af] text-white text-base md:text-lg font-bold rounded-xl hover:bg-[#1e3a8a] hover:scale-105 transition-all shadow-xl shadow-green-500/20">
-          Fale com um Especialista
-        </a>
-      </div>
-    </section>
+    @defer (on viewport) {
+      <app-cta-contact></app-cta-contact>
+    } @placeholder {
+      <div class="h-[300px] bg-blue-900 animate-pulse"></div>
+    }
 
   </main>
 

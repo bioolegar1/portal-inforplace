@@ -37,6 +37,30 @@ export const routes: Routes = [
     loadComponent: () => import('./features/public/solutions/safe/safe.component').then(m => m.SafeComponent)
   },
 
+  {
+    path: 'obras',
+    title: 'Custo de Obras - Gestao de Imobiliários',
+    loadComponent: () => import('./features/public/solutions/obras/obras.component').then(m => m.ObrasComponent)
+  },
+
+  {
+    path: 'pvinfo',
+    title: 'PDV. Registre vendas,',
+    loadComponent: () => import('./features/public/solutions/pvinfo/pvinfo.component').then(m => m.PvinfoComponent)
+  },
+
+  {
+    path: 'notainfo',
+    title: 'NOTAinfo - Emissor Fiscal',
+    loadComponent: () => import('./features/public/solutions/notainfo/notainfo.component').then(m => m.NotainfoComponent)
+  },
+
+  {
+    path: 'coletorxml',
+    title: 'Coletor XML',
+    loadComponent: () => import('./features/public/solutions/coletorxml/coletorxml.component').then(m => m.ColetorComponent)
+  },
+
   // Rota coringa (Redirecionamento não precisa de lazy load)
   {
     path: '**',
