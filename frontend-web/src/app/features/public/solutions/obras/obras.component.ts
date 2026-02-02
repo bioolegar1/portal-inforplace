@@ -8,6 +8,7 @@ import {LatestUpdatesComponent} from '../../components/latest-updates/latest-upd
 import {TestimonialsComponent} from '../../../../core/layout/testmonials/testmonials.component';
 import {SolutionFeaturesComponent} from '../../../../core/layout/solution-features/solution-features.component';
 import {FaqAccordionComponent, FaqItem} from '../../../../core/layout/faq-accordion/faq-accordion.component';
+import {HeroSolutionComponent} from '../../../../core/layout/hero-solution/hero-solution.component';
 
 export interface FeaturesItem {
   icon: string;
@@ -36,6 +37,7 @@ export interface FeaturesItem {
     TestimonialsComponent,
     SolutionFeaturesComponent,
     FaqAccordionComponent,
+    HeroSolutionComponent,
   ],
   templateUrl: './obras.component.html',
 })
@@ -93,6 +95,13 @@ export class ObrasComponent implements OnInit {
 
   toggleAccordion(index: number) {
     this.activeAccordion.update(current => current === index ? null : index);
+  }
+
+  handleHeroContact() {
+    const element = document.getElementById('contato'); // Certifique-se que sua seção de contato tenha id="contato"
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   // OBS: Removi a variável 'testimonials' daqui pois o componente filho usa seus próprios dados.

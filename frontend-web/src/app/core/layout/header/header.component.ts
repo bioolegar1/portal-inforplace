@@ -17,7 +17,7 @@ export class HeaderComponent {
   // 2. Dados do Menu (Signals)
   solutionsMenu = signal([
     { name: 'Sistema Pillar', icon: 'pillar42x42.png', link: '/pillar' },
-    { name: 'Pillar REMOTO', icon: 'pillar42x42.png', link: '/pillar-remoto' },
+    { name: 'Pillar REMOTO', icon: 'pillar42x42.png', link: '/pillarmobile' },
     { name: 'Sistema SAFE', icon: 'safe.png', link: '/safe' },
     { name: 'Custo de Obras', icon: 'custodeobras.png', link: '/obras' },
     { name: 'PDV - Ponto de Venda', icon: 'pvinfo.png', link: '/pvinfo' },

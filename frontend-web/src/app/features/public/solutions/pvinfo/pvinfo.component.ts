@@ -7,6 +7,7 @@ import { LatestUpdatesComponent } from '../../components/latest-updates/latest-u
 import { TestimonialsComponent } from '../../../../core/layout/testmonials/testmonials.component';
 import {FaqAccordionComponent} from '../../../../core/layout/faq-accordion/faq-accordion.component';
 import {SolutionFeaturesComponent} from '../../../../core/layout/solution-features/solution-features.component';
+import {HeroSolutionComponent} from '../../../../core/layout/hero-solution/hero-solution.component';
 
 @Component({
   selector: 'app-pvinfo',
@@ -19,7 +20,8 @@ import {SolutionFeaturesComponent} from '../../../../core/layout/solution-featur
     LatestUpdatesComponent,
     TestimonialsComponent,
     FaqAccordionComponent,
-    SolutionFeaturesComponent
+    SolutionFeaturesComponent,
+    HeroSolutionComponent
   ],
   templateUrl: './pvinfo.component.html',
 })
@@ -39,6 +41,13 @@ export class PvinfoComponent implements OnInit {
 
   toggleAccordion(index: number) {
     this.activeAccordion.update(current => current === index ? null : index);
+  }
+
+  handleHeroContact() {
+    const element = document.getElementById('contato'); // Certifique-se que sua seção de contato tenha id="contato"
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   // --- DADOS FORNECIDOS ---

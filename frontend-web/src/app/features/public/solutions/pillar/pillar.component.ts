@@ -7,6 +7,7 @@ import {CtaContactComponent} from '../../../../core/layout/cta-contact/cta-conta
 import {LatestUpdatesComponent} from '../../components/latest-updates/latest-updates.component';
 import {FaqAccordionComponent, FaqItem} from '../../../../core/layout/faq-accordion/faq-accordion.component';
 import {SolutionFeaturesComponent} from '../../../../core/layout/solution-features/solution-features.component';
+import {HeroSolutionComponent} from '../../../../core/layout/hero-solution/hero-solution.component';
 
 // Interface do FAQ
 interface FeatureItem {
@@ -20,7 +21,7 @@ interface FeatureItem {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   // 2. Adicione o TestimonialsComponent nos imports
-  imports: [CommonModule, TestimonialsComponent, CtaContactComponent, LatestUpdatesComponent, FaqAccordionComponent, SolutionFeaturesComponent],
+  imports: [CommonModule, TestimonialsComponent, CtaContactComponent, LatestUpdatesComponent, FaqAccordionComponent, SolutionFeaturesComponent, HeroSolutionComponent],
   templateUrl: './pillar.component.html',
 })
 export class PillarComponent implements OnInit {
@@ -35,6 +36,13 @@ export class PillarComponent implements OnInit {
   activeAccordion = signal<number | null>(null);
   toggleAccordion(index: number) {
     this.activeAccordion.update(current => current === index ? null : index);
+  }
+
+  handleHeroContact() {
+    const element = document.getElementById('contato'); // Certifique-se que sua seção de contato tenha id="contato"
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   // Features (Mantido)

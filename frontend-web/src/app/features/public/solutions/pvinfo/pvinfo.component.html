@@ -2,66 +2,25 @@
 
   <main>
 
-    <section name="hero" class="relative py-5 md:py-20 overflow-hidden bg-gradient-to-br from-[#111827] to-[#374151] text-white">
+    <app-hero-solution
+      tag="PDV - PONTO DE VENDA"
+      titlePrincipal="PONTO DE VENDA"
+      titleDestaque="DE ALTA PERFORMANCE"
+      description="Aumente a eficiência de seu ponto de venda. Registre vendas, estoque e ofereça um atendimento rápido aos clientes.
+            Entre em contato com a Inforplace, teremos o maior prazer em atendê-lo e lhe assessorar."
+      color="preto"
+      aspectType="auto"
+      [images]="[
+    { path: 'assets/img/solucoes-hero/pvinfo-03.avif', showSystemBar: true },
+    { path: 'assets/img/solucoes-hero/pvinfo.avif', showSystemBar: false },
+    { path: 'assets/img/solucoes-hero/pvinfo-01.avif', showSystemBar: false }
+  ]"
+      (contactClick)="handleHeroContact()"
+    />
 
-      <div class="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-
-      <div class="absolute -top-5 -right-20 w-96 h-96 bg-gray-500 rounded-full blur-3xl opacity-20"></div>
-      <div class="absolute bottom-0 left-0 w-80 h-80 bg-gray-700 rounded-full blur-3xl opacity-20"></div>
-
-      <div class="container mx-auto px-4 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-
-        <div class="text-center md:text-left">
-          <span class="inline-block py-1 px-3 rounded-full bg-gray-950 text-gray-200 border hover:scale-105 border-gray-700 text-[10px] md:text-xs font-bold uppercase tracking-wider mb-4 md:mb-6 shadow-sm">
-            PDV - PONTO DE VENDA
-          </span>
-
-          <h1 class="text-3xl md:text-5xl lg:text-6xl text-white mb-4 md:mb-6 leading-tight">
-            O PONTO DE VENDA <br>
-            <span class="text-gray-400 font-extrabold">
-              <span class="font-light">DE</span> ALTA PERFOMANCE
-            </span>
-          </h1>
-
-          <p class="text-sm md:text-lg text-gray-200 mb-6 md:mb-8 leading-relaxed border-l-4 border-gray-500 pl-4 mx-auto md:mx-0 max-w-lg">
-            Aumente a eficiência de seu ponto de venda. Registre vendas, estoque e ofereça um atendimento rápido aos clientes.
-            Entre em contato com a Inforplace, teremos o maior prazer em atendê-lo e lhe assessorar.
-          </p>
-
-          <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <button (click)="contact.scrollIntoView({behavior: 'smooth'})"
-                    class="px-6 py-3 md:px-8 md:py-4 bg-gray-600 text-white font-bold rounded-xl hover:scale-110 hover:bg-gray-950 transition-all shadow-lg hover:shadow-gray-900/50 flex items-center justify-center gap-2 group text-sm md:text-base">
-              <span>Falar com Consultor</span>
-              <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="relative z-10 hidden md:block px-6">
-          <div class="aspect-square rounded-3xl overflow-hidden shadow-2xl shadow-black/50 border-4 border-gray-700 relative group rotate-1 hover:rotate-0 transition-all duration-500 bg-gray-900">
-            <img
-              ngSrc="assets/img/pvinfo.avif"
-              fill
-              priority
-              alt="Ponto de Venda Alta Performance"
-              class="object-cover transform group-hover:scale-105 transition-transform duration-700 opacity-90"
-            >
-            <div class="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-transparent opacity-60"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 pointer-events-none hidden md:block animate-bounce">
-        <div class="text-white/50 bg-white/5 p-2 rounded-full backdrop-blur-sm border border-white/10">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7-7-7m14-8l-7 7-7-7"></path></svg>
-        </div>
-      </div>
-    </section>
-
-
-    <app-solution-features [features]="features()" color="sky" />
-    <app-faq-accordion [data]="faqs()" color="sky" />
-    <app-testimonials  title="Clientes que confiam na Inforplace" color="sky"/>
+    <app-solution-features [features]="features()" color="preto" />
+    <app-faq-accordion [data]="faqs()" color="preto" />
+    <app-testimonials  title="Clientes que confiam na Inforplace" color="preto"/>
 
     @defer (on viewport) {
       <app-latest-updates/>
@@ -69,7 +28,7 @@
       <div class="h-[400px] bg-gray-100 animate-pulse"></div>
     }
 
-    <div #contact>
+    <div id="contato">
       @defer (on viewport) {
         <app-cta-contact/>
       } @placeholder {

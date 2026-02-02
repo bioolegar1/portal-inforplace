@@ -1,5 +1,11 @@
-import { Component, input, signal, output } from '@angular/core';
+import { Component, input, signal, output, computed } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+
+// Estrutura para cada slide do Hero
+export interface HeroImage {
+  path: string;
+  showSystemBar?: boolean; // Se true, adiciona a barra de janela de sistema
+}
 
 @Component({
   selector: 'app-hero-solution',
@@ -8,18 +14,71 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
   templateUrl: './hero-solution.component.html'
 })
 export class HeroSolutionComponent {
+  // Inputs de conteúdo
   tag = input.required<string>();
   titlePrincipal = input.required<string>();
   titleDestaque = input.required<string>();
   description = input.required<string>();
-  imagePaths = input.required<string[]>();
-  color = input<string>('orange');
+  images = input.required<HeroImage[]>();
 
-  // Adicione este output
+  // Inputs de estilo e comportamento
+  color = input<string>('orange');
+  /**
+   * Modos de proporção:
+   * 'wide': 16:9 padrão
+   * 'tela': 4:3 monitor
+   * 'mobile': 9:16 vertical
+   * 'auto': Respeita o formato original do arquivo de imagem
+   */
+  aspectType = input<'wide' | 'tela' | 'mobile' | 'auto'>('wide');
+
   contactClick = output<void>();
 
   currentIndex = signal<number>(1);
   isHovering = signal<boolean>(false);
+
+  /**
+   * layoutConfig: Centraliza a lógica de CSS.
+   * Quando o modo é 'auto', removemos larguras fixas para deixar a imagem fluir.
+   */
+  layoutConfig = computed(() => {
+    const type = this.aspectType();
+    switch (type) {
+      case 'mobile':
+        return {
+          aspectClass: 'aspect-[9/16]',
+          containerWidth: 'w-[280px]',
+          imgFit: 'object-cover',
+          baseOffset: 110,
+          hoverOffset: 160
+        };
+      case 'tela':
+        return {
+          aspectClass: 'aspect-[4/3]',
+          containerWidth: 'w-[450px]',
+          imgFit: 'object-cover',
+          baseOffset: 140,
+          hoverOffset: 200
+        };
+      case 'auto':
+        return {
+          aspectClass: 'aspect-auto',
+          containerWidth: 'max-w-[550px]', // Limite máximo de segurança
+          imgFit: 'contain',              // Mostra a imagem inteira sem cortes
+          baseOffset: 160,
+          hoverOffset: 220
+        };
+      case 'wide':
+      default:
+        return {
+          aspectClass: 'aspect-video',
+          containerWidth: 'w-[500px]',
+          imgFit: 'object-cover',
+          baseOffset: 160,
+          hoverOffset: 220
+        };
+    }
+  });
 
   onMouseMove(event: MouseEvent): void {
     this.isHovering.set(true);
@@ -33,13 +92,15 @@ export class HeroSolutionComponent {
     if (width === 0) return;
 
     const position = x / width;
-    const zone = Math.floor(position * 3);
+    // Calcula a zona baseada na quantidade real de imagens
+    const zone = Math.floor(position * this.images().length);
     this.currentIndex.set(zone);
   }
 
   onMouseLeave(): void {
     this.isHovering.set(false);
-    this.currentIndex.set(1);
+    // Volta para a imagem do meio automaticamente
+    this.currentIndex.set(Math.floor(this.images().length / 2));
   }
 
   getZIndex(index: number): number {
@@ -53,29 +114,18 @@ export class HeroSolutionComponent {
   getTransform(index: number): string {
     const current = this.currentIndex();
     const hovering = this.isHovering();
+    const config = this.layoutConfig();
 
     if (index === current) {
-      const scale = hovering ? 1.54 : 1.10;
-      return `scale(${scale}) translateX(0)`;
+      return `scale(${hovering ? 1.4 : 1.10}) translateX(0)`;
     }
 
-    const baseOffset = hovering ? 200 : 140;
-    const scale = 0.85;
+    const baseOffset = hovering ? config.hoverOffset : config.baseOffset;
+    const offset = (index - current) * baseOffset;
 
-    if (index < current) {
-      const offset = (current - index) * baseOffset;
-      return `scale(${scale}) translateX(-${offset}px)`;
-    }
-
-    if (index > current) {
-      const offset = (index - current) * baseOffset;
-      return `scale(${scale}) translateX(${offset}px)`;
-    }
-
-    return 'scale(1) translateX(0)';
+    return `scale(0.85) translateX(${offset}px)`;
   }
 
-  // Simplifique este método
   onContactClick(event: Event): void {
     event.preventDefault();
     this.contactClick.emit();
@@ -83,10 +133,10 @@ export class HeroSolutionComponent {
 
   get colorClasses() {
     const c = this.color();
-
-    const colorMap: { [key: string]: { from: string, to: string, button: string, accent: string } } = {
+    const colorMap: any = {
       orange: { from: '#7c2d12', to: '#111827', button: '#ea580c', accent: '#fb923c' },
       blue: { from: '#1e3a8a', to: '#111827', button: '#1e40af', accent: '#60a5fa' },
+      azul: { from: '#1e3a8a', to: '#111827', button: '#1e40af', accent: '#60a5fa' },
       sky: { from: '#0c4a6e', to: '#111827', button: '#0284c7', accent: '#38bdf8' },
       teal: { from: '#134e4a', to: '#111827', button: '#0d9488', accent: '#2dd4bf' },
       verde: { from: '#064e3b', to: '#111827', button: '#15803d', accent: '#4ade80' },
@@ -100,15 +150,9 @@ export class HeroSolutionComponent {
       tagText: `text-${c}-400`,
       tagBorder: `border-${c}-500/30`,
       accentBorder: `border-${c}-500`,
-      heroStyle: {
-        'background': `linear-gradient(to bottom right, ${selected.from}, ${selected.to})`
-      },
-      buttonStyle: {
-        'background-color': selected.button
-      },
-      accentText: {
-        'color': selected.accent
-      }
+      heroStyle: { 'background': `linear-gradient(to bottom right, ${selected.from}, ${selected.to})` },
+      buttonStyle: { 'background-color': selected.button },
+      accentText: { 'color': selected.accent }
     };
   }
 }

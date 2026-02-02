@@ -68,6 +68,13 @@ export class HomeComponent implements OnInit {
       icon: 'Coletorxml.png',
       prints: ['print-coletor.png', 'print-coletor-2.png', 'print-coletor-3.png']
     },
+    {
+      id: 'pillarmobile',
+      name: 'Pillar Mobile',
+      description: 'Faça a sua gestão de compras de materiais de onde você estiver. Simples e prático! Controle solicitações, autorizações e ordens de compra em tempo real.',
+      icon: 'pillar42x42.png',
+      prints: ['print-coletor.png', 'print-coletor-2.png', 'print-coletor-3.png']
+    },
   ]);
 
   constructor(private meta: Meta, private title: Title) {}

@@ -20,6 +20,13 @@ export interface FeatureItem {
 })
 export class ColetorComponent {
 
+  handleHeroContact() {
+    const element = document.getElementById('contato'); // Certifique-se que sua seção de contato tenha id="contato"
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   // Lógica: Criamos um sinal que armazena o array de funcionalidades.
   // No HTML, ao usar coletorFeatures(), o Angular lê o conteúdo deste sinal.
   features = signal<FeatureItem[]>([    {

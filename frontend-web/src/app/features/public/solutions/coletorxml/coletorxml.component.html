@@ -4,12 +4,13 @@
   titleDestaque="XML de NF-e e CT-e"
   description="Coletor é programa que faz a baixa de XML de NF-e e CT-e, dando ciência automaticamente."
   color="orange"
-  [imagePaths]="[
-    'assets/img/solucoes-hero/print-coletor.png',
-    'assets/img/solucoes-hero/print-coletor-2.png',
-    'assets/img/solucoes-hero/print-coletor-3.png'
+  aspectType="auto"
+  [images]="[
+    { path: 'assets/img/solucoes-hero/print-coletor-2.png', showSystemBar: true },
+    { path: 'assets/img/solucoes-hero/print-coletor.png', showSystemBar: true },
+    { path: 'assets/img/solucoes-hero/print-coletor-3.png', showSystemBar: true }
   ]"
-  (contactClick)="scrollToCta()"
+  (contactClick)="handleHeroContact()"
 />
 
 <app-solution-features [features]="features()" color="orange" />
@@ -21,7 +22,7 @@
   <div class="h-[400px] bg-gray-100 animate-pulse"></div>
 }
 
-<div #cta>
+<div id="contato">
   @defer (on viewport) {
     <app-cta-contact></app-cta-contact>
   } @placeholder {

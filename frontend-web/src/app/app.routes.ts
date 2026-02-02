@@ -61,6 +61,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/public/solutions/coletorxml/coletorxml.component').then(m => m.ColetorComponent)
   },
 
+  {
+    path: 'pillarmobile',
+    title: 'Pillar Mobile',
+    loadComponent:()=> import('./features/public/solutions/pillar-mobile/pillar-mobile.component').then(m => m.PillarMobileComponent)
+  },
+
   // Rota coringa (Redirecionamento não precisa de lazy load)
   {
     path: '**',

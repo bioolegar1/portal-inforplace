@@ -8,11 +8,13 @@
     titleDestaque="Emissor de Nota Fiscal"
     description="Sistema emissor de nota fiscal eletrônica NF-e, emite nota fiscal em poucos cliques para sua empresa, simples e fácil de usar. Entre em contato com a Inforplace, teremos o maior prazer em atendê-lo e lhe assessorar."
     color="sky"
-    [imagePaths]="[
-      'assets/img/solucoes-hero/print-coletor.png',
-      'assets/img/solucoes-hero/notainfo.png',
-      'assets/img/solucoes-hero/print-coletor-3.png'
-    ]"
+    aspectType="auto"
+    [images]="[
+    { path: 'assets/img/solucoes-hero/nfi-01.avif', showSystemBar: true },
+    { path: 'assets/img/solucoes-hero/nfi-02.avif', showSystemBar: false },
+    { path: 'assets/img/solucoes-hero/nfi-03.avif', showSystemBar: true }
+  ]"
+    (contactClick)="handleHeroContact()"
     />
 
     <app-solution-features [features]="features()" color="sky" />
@@ -25,7 +27,7 @@
       <div class="h-[400px] bg-gray-100 animate-pulse"></div>
     }
 
-    <div #cta>
+    <div id="contato">
       @defer (on viewport) {
         <app-cta-contact/>
       } @placeholder {

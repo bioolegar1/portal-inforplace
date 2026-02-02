@@ -51,6 +51,13 @@ export class NotainfoComponent implements OnInit {
     this.activeAccordion.update(current => current === index ? null : index);
   }
 
+  handleHeroContact() {
+    const element = document.getElementById('contato'); // Certifique-se que sua seção de contato tenha id="contato"
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   // --- DADOS FORNECIDOS ---
   features = signal<FeatureItem[]>([    {
       title: 'Nota Fiscal Eletrônica',

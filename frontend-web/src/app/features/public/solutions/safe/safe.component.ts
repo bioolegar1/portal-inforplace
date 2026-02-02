@@ -7,6 +7,7 @@ import {CtaContactComponent} from '../../../../core/layout/cta-contact/cta-conta
 import {LatestUpdatesComponent} from '../../components/latest-updates/latest-updates.component';
 import {FaqAccordionComponent} from '../../../../core/layout/faq-accordion/faq-accordion.component';
 import {SolutionFeaturesComponent} from '../../../../core/layout/solution-features/solution-features.component';
+import {HeroSolutionComponent} from '../../../../core/layout/hero-solution/hero-solution.component';
 
 
 
@@ -31,7 +32,7 @@ interface FaqItem {
     LatestUpdatesComponent,
     TestimonialsComponent,
     FaqAccordionComponent,
-    SolutionFeaturesComponent],
+    SolutionFeaturesComponent, HeroSolutionComponent],
   templateUrl: './safe.component.html',
   styles: []
 })
@@ -48,6 +49,13 @@ export class SafeComponent implements OnInit {
 
   toggleAccordion(index: number) {
     this.activeAccordion.update(current => current === index ? null : index);
+  }
+
+  handleHeroContact() {
+    const element = document.getElementById('contato'); // Certifique-se que sua seção de contato tenha id="contato"
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   // 3. Funcionalidades (Dados do SAFE)
