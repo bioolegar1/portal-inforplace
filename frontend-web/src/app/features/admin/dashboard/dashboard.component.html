@@ -1,0 +1,134 @@
+<div class="fade-in space-y-6">
+
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 dark:text-white sm:truncate sm:text-3xl sm:tracking-tight transition-colors">
+        {{ greeting }}, Admin!
+      </h2>
+      <p class="mt-1 text-sm text-gray-500 dark:text-slate-400 transition-colors">
+        Aqui está o resumo do que está acontecendo no Inforplace Notes.
+      </p>
+    </div>
+    <div class="mt-4 sm:ml-4 sm:mt-0">
+      <a routerLink="/admin/releases/new" class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-blue-500 hover:shadow-md transition-all active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+        <svg class="-ml-0.5 mr-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+        </svg>
+        Nova Release
+      </a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <div *ngFor="let stat of stats" class="relative overflow-hidden rounded-xl bg-white dark:bg-slate-900 px-4 py-5 shadow-sm border border-transparent dark:border-slate-800 sm:px-6 sm:py-6 transition-all hover:shadow-md dark:hover:border-slate-700">
+      <dt>
+        <div class="absolute rounded-md p-3" [ngClass]="stat.color + '/10 dark:' + stat.color + '/20'">
+          <svg class="h-6 w-6" [ngClass]="stat.color.replace('bg-', 'text-')" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="stat.icon" />
+          </svg>
+        </div>
+        <p class="ml-16 truncate text-sm font-medium text-gray-500 dark:text-slate-400">{{ stat.label }}</p>
+      </dt>
+      <dd class="ml-16 flex items-baseline pb-1 sm:pb-2">
+        <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ stat.value }}</p>
+
+        <p class="ml-2 flex items-baseline text-sm font-semibold"
+           [ngClass]="{
+             'text-green-600 dark:text-green-400': stat.trend === 'up',
+             'text-red-600 dark:text-red-400': stat.trend === 'down',
+             'text-gray-500 dark:text-slate-500': stat.trend === 'neutral'
+           }">
+
+          <svg *ngIf="stat.trend === 'up'" class="h-5 w-5 flex-shrink-0 self-center text-green-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z" clip-rule="evenodd" />
+          </svg>
+
+          <svg *ngIf="stat.trend === 'down'" class="h-5 w-5 flex-shrink-0 self-center text-red-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z" clip-rule="evenodd" />
+          </svg>
+
+          {{ stat.change }}
+        </p>
+      </dd>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+
+    <div class="lg:col-span-2">
+      <div class="overflow-hidden rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-transparent dark:border-slate-800 transition-colors">
+        <div class="p-6">
+          <h3 class="text-base font-bold leading-6 text-gray-900 dark:text-white">Atividade Recente</h3>
+          <div class="mt-6 flow-root">
+            <ul role="list" class="-my-5 divide-y divide-gray-200 dark:divide-slate-800">
+              <li *ngFor="let activity of recentActivities" class="py-5">
+                <div class="relative focus-within:ring-2 focus-within:ring-blue-500 rounded-md p-1 -m-1 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <h3 class="text-sm font-semibold text-gray-800 dark:text-slate-200">
+                    <span class="absolute inset-0" aria-hidden="true"></span>
+                    {{ activity.user }}
+                    <span class="font-normal text-gray-500 dark:text-slate-400">{{ activity.action }}</span>
+                    <span class="text-blue-600 dark:text-blue-400"> {{ activity.target }}</span>
+                  </h3>
+                  <p class="mt-1 text-sm text-gray-500 dark:text-slate-500 line-clamp-2">{{ activity.time }}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 border-t border-gray-100 dark:border-slate-800 pt-4">
+            <a href="#" class="flex w-full items-center justify-center rounded-lg bg-gray-50 dark:bg-slate-800 px-3 py-2.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors sm:mt-0 sm:w-auto">
+              Ver histórico completo
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-1 space-y-6">
+      <div class="overflow-hidden rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-transparent dark:border-slate-800 transition-colors">
+        <div class="p-6">
+          <h3 class="text-base font-bold leading-6 text-gray-900 dark:text-white">Status dos Serviços</h3>
+          <ul class="mt-6 space-y-4">
+            <li class="flex items-center justify-between">
+              <div class="flex items-center">
+                <span class="flex h-2.5 w-2.5 rounded-full bg-emerald-500 mr-3 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></span>
+                <span class="text-sm font-medium text-gray-600 dark:text-slate-300">API Gateway</span>
+              </div>
+              <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2.5 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800">Online</span>
+            </li>
+            <li class="flex items-center justify-between">
+              <div class="flex items-center">
+                <span class="flex h-2.5 w-2.5 rounded-full bg-emerald-500 mr-3 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></span>
+                <span class="text-sm font-medium text-gray-600 dark:text-slate-300">Database</span>
+              </div>
+              <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2.5 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800">Online</span>
+            </li>
+            <li class="flex items-center justify-between">
+              <div class="flex items-center">
+                <span class="flex h-2.5 w-2.5 rounded-full bg-amber-500 mr-3 shadow-[0_0_8px_rgba(245,158,11,0.4)]"></span>
+                <span class="text-sm font-medium text-gray-600 dark:text-slate-300">Upload de Imagens</span>
+              </div>
+              <span class="text-xs font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-0.5 rounded-full border border-amber-100 dark:border-amber-800">Lento</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-6 overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 shadow-lg text-white relative group">
+        <div class="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors"></div>
+
+        <div class="p-6 relative z-10">
+          <h3 class="text-lg font-bold flex items-center gap-2">
+            <span>🚀</span> Inforplace Notes v2.0
+          </h3>
+          <p class="mt-2 text-sm text-blue-100/90 leading-relaxed">
+            A nova versão do sistema de releases está no ar com suporte a Dark Mode e novos blocos.
+          </p>
+          <button class="mt-5 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-sm font-semibold transition-all backdrop-blur-sm">
+            Ler Documentação
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

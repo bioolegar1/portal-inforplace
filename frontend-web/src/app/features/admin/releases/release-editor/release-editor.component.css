@@ -1,0 +1,250 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   1. ESTRUTURA (LAYOUT)
+   ========================================================= */
+
+.editor-wrapper {
+  @apply min-h-screen pb-32 font-sans transition-colors duration-300;
+}
+
+.editor-header {
+  @apply sticky top-0 z-40 py-4 px-6 mb-8 transition-all duration-300 backdrop-blur-xl border-b;
+}
+
+.editor-layout {
+  @apply max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start;
+}
+
+.editor-panel {
+  @apply rounded-2xl overflow-visible transition-all duration-300 border shadow-sm;
+}
+
+/* Inputs */
+.input-seamless {
+  @apply w-full bg-transparent border-0 border-b-2 border-transparent px-0 py-2 transition-all duration-300 ease-out focus:ring-0;
+}
+
+.input-field {
+  @apply block w-full rounded-xl px-4 py-3 text-sm shadow-sm transition-all duration-200 focus:ring-4;
+}
+
+.editor-textarea {
+  @apply input-field min-h-[100px] resize-y leading-relaxed;
+}
+
+.editor-select {
+  @apply input-field appearance-none bg-no-repeat cursor-pointer pr-10;
+  background-position: right 1rem center;
+  background-size: 1.25rem 1.25rem;
+}
+
+.label-field {
+  @apply block text-xs font-bold uppercase tracking-wider mb-2 ml-1;
+}
+
+/* Blocos */
+.content-block {
+  @apply relative rounded-2xl border-2 my-4 transition-all duration-300;
+}
+
+.block-inner {
+  @apply p-6 sm:p-8 space-y-5;
+}
+
+/* Toolbar */
+.block-toolbar {
+  @apply absolute -right-3 -top-5 z-20 flex items-center gap-1 p-1.5 rounded-xl shadow-lg opacity-0 transition-all duration-200 scale-95 origin-bottom-left pointer-events-none border;
+}
+.content-block:hover .block-toolbar {
+  @apply opacity-100 scale-100 pointer-events-auto -translate-y-1;
+}
+
+.block-handle {
+  @apply flex h-8 items-center gap-2 px-3 text-[10px] font-bold uppercase tracking-wider rounded-lg mr-1 border cursor-grab active:cursor-grabbing select-none;
+}
+
+.toolbar-btn {
+  @apply flex h-8 w-8 items-center justify-center rounded-lg transition-all;
+}
+
+/* Botões Add */
+.add-block-grid {
+  @apply grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 mt-8;
+}
+
+.add-block-btn {
+  @apply flex flex-col items-center justify-center gap-3 p-4 rounded-2xl border transition-all duration-200 cursor-pointer hover:shadow-md hover:-translate-y-1 active:scale-95;
+}
+
+/* Timeline & Checklist */
+.checklist-row {
+  @apply flex items-center gap-3 p-1 rounded-lg transition-colors;
+}
+.timeline-row {
+  @apply flex gap-5 p-5 rounded-2xl border transition-all hover:shadow-sm;
+}
+
+
+/* =========================================================
+   2. PELE (CORES & DARK MODE)
+   ========================================================= */
+
+/* --- PADRÃO (LIGHT MODE) --- */
+.editor-wrapper { @apply bg-slate-100 text-slate-900; }
+.editor-header  { @apply bg-white/90 border-slate-200; }
+.editor-panel   { @apply bg-white border-slate-200; }
+
+.input-field    { @apply bg-slate-50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20; }
+.input-seamless { @apply text-slate-900 placeholder-slate-400 focus:border-indigo-600; }
+
+.content-block  { @apply bg-white border-transparent hover:border-indigo-100; }
+.block-toolbar  { @apply bg-white border-slate-200; }
+.block-handle   { @apply bg-slate-50 text-slate-600 border-slate-200; }
+.toolbar-btn    { @apply text-slate-500 hover:bg-slate-100 hover:text-indigo-600; }
+.add-block-btn  { @apply bg-white border-slate-300 hover:border-indigo-400; }
+.timeline-row   { @apply bg-slate-50 border-slate-200 hover:bg-white hover:border-indigo-200; }
+
+.editor-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* --- FORÇAR DARK MODE (:host-context) --- */
+
+:host-context(.dark) .editor-wrapper {
+  background-color: #020617 !important;
+  color: #f8fafc !important;
+}
+
+:host-context(.dark) .editor-header {
+  background-color: rgba(15, 23, 42, 0.9) !important;
+  border-bottom-color: #1e293b !important;
+}
+
+:host-context(.dark) .editor-panel {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+  box-shadow: none !important;
+}
+
+/* Inputs Dark */
+:host-context(.dark) .input-field {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #fff !important;
+}
+:host-context(.dark) .input-field:focus {
+  background-color: #0f172a !important;
+  border-color: #6366f1 !important;
+}
+:host-context(.dark) .input-seamless {
+  color: #fff !important;
+}
+:host-context(.dark) .label-field {
+  color: #94a3b8 !important;
+}
+
+/* Blocos Dark */
+:host-context(.dark) .content-block {
+  background-color: #0f172a !important;
+  border-color: transparent !important;
+}
+:host-context(.dark) .content-block:hover {
+  border-color: #312e81 !important;
+}
+
+/* Toolbar Dark */
+:host-context(.dark) .block-toolbar {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+:host-context(.dark) .block-handle {
+  background-color: #020617 !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+:host-context(.dark) .toolbar-btn {
+  color: #94a3b8 !important;
+}
+:host-context(.dark) .toolbar-btn:hover {
+  background-color: #334155 !important;
+  color: #fff !important;
+}
+
+/* Botões Add Dark - CORREÇÃO DE TEXTO HOVER */
+:host-context(.dark) .add-block-btn {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+}
+:host-context(.dark) .add-block-btn:hover {
+  border-color: #6366f1 !important;
+}
+
+/* Círculo do ícone */
+:host-context(.dark) .add-block-btn .w-12 {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+}
+
+/* Ícone */
+:host-context(.dark) .add-block-btn .text-2xl {
+  color: #818cf8 !important; /* Azulado */
+}
+:host-context(.dark) .add-block-btn:hover .text-2xl {
+  color: #ffffff !important; /* Branco Hover */
+}
+
+/* Título (Label) - Correção: usando span.text-xs */
+:host-context(.dark) .add-block-btn span.text-xs {
+  color: #818cf8 !important; /* Azulado */
+}
+:host-context(.dark) .add-block-btn:hover span.text-xs {
+  color: #ffffff !important; /* Branco Hover */
+}
+
+/* Descrição pequena */
+:host-context(.dark) .add-block-btn span.text-\[10px\] {
+  color: #64748b !important;
+}
+:host-context(.dark) .add-block-btn:hover span.text-\[10px\] {
+  color: #cbd5e1 !important;
+}
+
+/* Timeline/Checklist Dark */
+:host-context(.dark) .timeline-row {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+/* SVG do Select (Branco para Dark Mode) */
+:host-context(.dark) .editor-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+}
+
+/* --- CORREÇÃO: PLACEHOLDERS DE IMAGEM --- */
+:host-context(.dark) .aspect-video {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+:host-context(.dark) .aspect-video span {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+:host-context(.dark) .h-32.bg-slate-50,
+:host-context(.dark) .h-32.bg-slate-800 {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+}
+
+:host-context(.dark) .h-32 span {
+  color: #64748b !important;
+}
+
+
+/* Utilitários */
+.fade-in { animation: fadeIn 0.5s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

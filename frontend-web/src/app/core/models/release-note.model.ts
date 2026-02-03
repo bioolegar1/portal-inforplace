@@ -1,21 +1,35 @@
-import {ContentBlock} from './blocks/content-block.interface';
+import { ContentBlock } from './blocks/content-block.interface'; // ✅ Caminho corrigido baseado no seu log
 
-export interface ReleaseNote{
-  id: number;
-  version: string;
-  title: string;
+export interface ReleaseNote {
+  id: string;
   slug: string;
+  title: string;
+  version?: string;
+  category?: string;
   summary?: string;
+  content?: string; // HTML legado
+  blocks?: ContentBlock[]; // ✅ O array de blocos
   coverImage?: string;
-  content: ContentBlock[];
-  isPublished: boolean;
-  publishedAt?: string;
-  createdBy?: number;
-  createdAt?: string;
-  updatedAt?: string;
   viewCount?: number;
+  publishedAt?: string;
+  createdAt?: string;
+  status?: 'draft' | 'published' | 'archived';
 }
-
+export interface ReleaseNote {
+  id: string; // ou number
+  slug: string;
+  title: string;
+  version?: string;
+  category?: string;
+  summary?: string;
+  content?: string; // HTML legado (opcional)
+  blocks?: ContentBlock[]; // ✅ O ARRAY DE BLOCOS NOVO
+  coverImage?: string;
+  viewCount?: number;
+  publishedAt?: string;
+  createdAt?: string;
+  status?: 'draft' | 'published' | 'archived';
+}
 export interface ReleaseNoteListItem {
   id: number;
   version: string;
