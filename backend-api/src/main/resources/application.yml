@@ -14,7 +14,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: none  # ⬅️⬅️⬅️ CRÍTICO: DEVE SER "none"
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -57,16 +57,32 @@ app:
 
   upload:
     dir: ${UPLOAD_DIR:./uploads}
-    url-base: ${UPLOAD_URL_BASE:http://localhost:8080/uploads}
+    # ALTERADO: URL base agora utiliza HTTPS para evitar erro de Mixed Content no navegador
+    url-base: ${UPLOAD_URL_BASE:https://localhost:8080/uploads}
+    upload:
+      # AQUI ESTÁ A CONFIGURAÇÃO CORRETA
+      # O './' garante que a pasta seja criada na raiz do projeto onde o JAR/Java está rodando
+      dir: ${UPLOAD_DIR:./uploads}
 
   cors:
-    allowed-origins: ${CORS_ORIGINS:http://localhost:4200,http://localhost:3000}
+    # ALTERADO: Adicionado suporte a origens HTTPS para o Angular/React
+    allowed-origins: ${CORS_ORIGINS:https://localhost:4200,https://localhost:3000, http://localhost:4200,https://localhost:4200}
 
 logging:
   level:
     com.inforplace.portal: DEBUG
     org.springframework.web: DEBUG
-    org.flywaydb: DEBUG  # ⬅️ ADICIONE ISTO para ver logs do Flyway
+    org.flywaydb: DEBUG
 
 server:
-  port: 8080
+  # ALTERADO: Porta 8443 é o padrão comum para HTTPS em desenvolvimento Spring
+  port: ${SERVER_PORT:8080}
+
+  # NOVO: Configurações de SSL
+  ssl:
+    enabled: true
+    # O arquivo keystore deve estar na pasta src/main/resources
+    key-store: ${SSL_KEYSTORE:classpath:keystore.p12}
+    key-store-password: ${SSL_KEYSTORE_PASSWORD:sua_senha}
+    key-store-type: PKCS12
+    key-alias: ${SSL_KEY_ALIAS:tomcat}

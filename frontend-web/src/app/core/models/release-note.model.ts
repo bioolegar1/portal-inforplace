@@ -1,67 +1,74 @@
-import { ContentBlock } from './blocks/content-block.interface'; // ✅ Caminho corrigido baseado no seu log
+import { ContentBlock } from './blocks/content-block.interface';
 
-export interface ReleaseNote {
-  id: string;
-  slug: string;
-  title: string;
-  version?: string;
-  category?: string;
-  summary?: string;
-  content?: string; // HTML legado
-  blocks?: ContentBlock[]; // ✅ O array de blocos
-  coverImage?: string;
-  viewCount?: number;
-  publishedAt?: string;
-  createdAt?: string;
-  status?: 'draft' | 'published' | 'archived';
-}
-export interface ReleaseNote {
-  id: string; // ou number
-  slug: string;
-  title: string;
-  version?: string;
-  category?: string;
-  summary?: string;
-  content?: string; // HTML legado (opcional)
-  blocks?: ContentBlock[]; // ✅ O ARRAY DE BLOCOS NOVO
-  coverImage?: string;
-  viewCount?: number;
-  publishedAt?: string;
-  createdAt?: string;
-  status?: 'draft' | 'published' | 'archived';
-}
+// =========================================================
+// 1. DTOs DE RESPOSTA (GET)
+// =========================================================
+
 export interface ReleaseNoteListItem {
   id: number;
-  version: string;
   title: string;
   slug: string;
-  summary?: string;
+  version: string;
+  summary: string;
+  coverImage?: string;
+  isPublished: boolean;
+  publishedAt?: string;
+  createdAt?: string;   // <--- ADICIONE ESTA LINHA AQUI
+  viewCount?: number;
+  category?: string; // Opcional
+}
+
+export interface ReleaseNote {
+  id: number;
+  title: string;
+  slug: string;
+  version: string;
+  summary: string;
   coverImage?: string;
   isPublished: boolean;
   publishedAt?: string;
   createdAt?: string;
+  updatedAt?: string;
   viewCount?: number;
+
+  // --- Campos de Compatibilidade Front/Back ---
+  // O Backend manda 'contentBlocks'. O Front antigo usava 'blocks'.
+  // Declaramos ambos para fazer o mapeamento no componente.
+  contentBlocks?: ContentBlock[];
+  blocks?: ContentBlock[];
+
+  // Campos opcionais que podem não vir do backend, mas o front usa
+  category?: string;
+  content?: string; // HTML legado
 }
 
+// =========================================================
+// 2. DTOs DE ENVIO (POST/PUT)
+// =========================================================
 
 export interface CreateReleaseNoteRequest {
-  version: string;
   title: string;
   slug: string;
-  summary?: string;
+  version: string;
+  summary: string;
   coverImage?: string;
-  content: ContentBlock[];
+  contentBlocks: ContentBlock[];
   isPublished: boolean;
 }
 
+export interface UpdateReleaseNoteRequest extends CreateReleaseNoteRequest {}
 
-export interface UpdateReleaseNoteRequest extends CreateReleaseNoteRequest{
-}
+// =========================================================
+// 3. PAGINAÇÃO
+// =========================================================
 
-export interface Page<T>{
+export interface Page<T> {
   content: T[];
   totalElements: number;
   totalPages: number;
   size: number;
   number: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
 }

@@ -1,371 +1,256 @@
-<div class="editor-wrapper fade-in">
+<div class="min-h-screen bg-gray-50/50">
 
-  <header class="editor-header">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <button (click)="goBack()" class="p-2 -ml-2 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        </button>
-        <div class="flex flex-col">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Editor de Release</span>
-          <h1 class="text-lg font-bold text-slate-900 dark:text-white leading-none">{{ isEditMode() ? 'Editando Publicação' : 'Nova Publicação' }}</h1>
-        </div>
-      </div>
+  <!-- Layout de 2 colunas -->
+  <div class="flex">
 
-      <div class="flex items-center gap-3">
-        <div class="hidden sm:flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700" [formGroup]="form">
-          <div class="w-2 h-2 rounded-full"
-               [ngClass]="{
-              'bg-amber-400': form.get('status')?.value === 'draft',
-              'bg-emerald-500': form.get('status')?.value === 'published',
-              'bg-slate-500': form.get('status')?.value === 'archived'
-            }"></div>
-          <span class="text-xs font-medium text-slate-700 dark:text-white capitalize">{{ form.get('status')?.value }}</span>
+    <!-- COLUNA PRINCIPAL - Editor -->
+    <div class="flex-1 p-6 pr-3">
+      <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+
+        <div class="flex items-center justify-between mb-8">
+          <h1 class="text-2xl font-bold text-gray-900">
+            {{ isEditing() ? 'Editar Release' : 'Nova Release' }}
+          </h1>
+          <button type="button" routerLink="/admin/releases" class="text-gray-500 hover:text-gray-700">
+            Cancelar
+          </button>
         </div>
 
-        <button (click)="onSubmit()" [disabled]="form.invalid || isSaving()" class="btn-primary">
-          <span *ngIf="isSaving()" class="animate-spin h-4 w-4 border-2 border-white/20 border-t-white rounded-full"></span>
-          {{ isSaving() ? 'Salvando...' : 'Salvar' }}
-        </button>
-      </div>
-    </div>
-  </header>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
 
-  <main class="editor-layout">
+          <div class="mb-8">
+            <label class="block text-sm font-bold text-gray-700 mb-2">Capa da Postagem</label>
 
-    <div class="lg:col-span-8 space-y-8">
+            <div class="flex items-center gap-6">
+              <div class="relative group w-48 h-32 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center overflow-hidden transition-all hover:border-blue-400">
 
-      <div class="editor-panel p-8 md:p-12" [formGroup]="form">
-        <input
-          type="text"
-          formControlName="title"
-          class="input-seamless text-4xl md:text-5xl font-black text-slate-900 dark:text-white placeholder-slate-300 dark:placeholder-slate-600"
-          placeholder="Título da Release"
-          autofocus>
+                <ng-container *ngIf="form.get('coverImage')?.value; else noImage">
+                  <img [src]="form.get('coverImage')?.value" class="w-full h-full object-cover">
+                  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <button type="button" (click)="fileInput.click()" class="p-2 bg-white rounded-full text-gray-700 hover:text-blue-600">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                    </button>
+                    <button type="button" (click)="removeImage()" class="p-2 bg-white rounded-full text-red-600 hover:bg-red-50">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                  </div>
+                </ng-container>
 
-        <textarea
-          formControlName="summary"
-          rows="2"
-          class="input-seamless text-xl text-slate-500 dark:text-slate-400 mt-4 resize-none leading-relaxed"
-          placeholder="Adicione um subtítulo ou resumo curto para descrever esta atualização..."></textarea>
-      </div>
+                <ng-template #noImage>
+                  <button type="button" (click)="fileInput.click()" class="flex flex-col items-center">
+                    <svg class="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span class="text-xs text-gray-500 font-medium">Upload da Capa</span>
+                  </button>
+                </ng-template>
 
-      <div class="space-y-6">
-        @for (block of blocks(); track block.id; let i = $index) {
-          <div [id]="'block-' + block.id" class="content-block group">
-
-            <div class="block-toolbar">
-              <div class="block-handle">
-                <span class="text-base mr-1">{{ getBlockIcon(block.type) }}</span>
-                {{ block.type }}
+                <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden">
               </div>
-              <button (click)="moveBlock(i, 'up')" [disabled]="i === 0" class="toolbar-btn" title="Subir">↑</button>
-              <button (click)="moveBlock(i, 'down')" [disabled]="i === blocks().length - 1" class="toolbar-btn" title="Descer">↓</button>
-              <div class="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-              <button (click)="removeBlock(i)" class="toolbar-btn delete" title="Remover">✕</button>
-            </div>
 
-            <div class="block-inner">
-              @switch (block.type) {
-
-                @case (BlockType.HEADER) {
-                  <div class="flex items-center gap-4">
-                    <select [(ngModel)]="block.data.level" class="input-field w-24 text-center font-bold">
-                      <option [ngValue]="1">H1</option>
-                      <option [ngValue]="2">H2</option>
-                      <option [ngValue]="3">H3</option>
-                    </select>
-                    <input
-                      type="text"
-                      [(ngModel)]="block.data.title"
-                      class="input-seamless text-2xl font-bold text-slate-900 dark:text-white"
-                      placeholder="Título da Seção...">
-                  </div>
-                }
-
-                @case (BlockType.TEXT) {
-                  <div class="relative group/text">
-    <textarea
-      [(ngModel)]="block.data.content"
-      rows="4"
-      class="input-seamless text-base text-slate-700 dark:text-slate-300 leading-7 min-h-[120px] pb-8"
-      placeholder="Comece a escrever aqui... Pressione Enter para novas linhas."></textarea>
-
-                    <div class="absolute bottom-2 left-2 opacity-0 group-hover/text:opacity-100 transition-opacity z-10">
-                      <label class="flex items-center gap-1.5 cursor-pointer bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-sm">
-                        <input
-                          type="checkbox"
-                          [(ngModel)]="block.data.allowHtml"
-                          class="rounded border-slate-300 dark:border-slate-500 text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5 dark:bg-slate-900 cursor-pointer">
-                        HTML Mode
-                      </label>
-                    </div>
-                  </div>
-                }
-
-                @case (BlockType.ALERT) {
-                  <div class="flex gap-4 p-4 rounded-lg border-l-4 transition-colors duration-300"
-                       [ngClass]="{
-                      'bg-blue-50/50 dark:bg-blue-900/20 border-blue-500': block.data.type === AlertType.INFO,
-                      'bg-emerald-50/50 dark:bg-emerald-900/20 border-emerald-500': block.data.type === AlertType.SUCCESS,
-                      'bg-amber-50/50 dark:bg-amber-900/20 border-amber-500': block.data.type === AlertType.WARNING,
-                      'bg-red-50/50 dark:bg-red-900/20 border-red-500': block.data.type === AlertType.ERROR
-                    }">
-                    <div class="flex-shrink-0 pt-1">
-                      <select [(ngModel)]="block.data.type" class="bg-transparent text-xl border-none p-0 cursor-pointer focus:ring-0 w-8">
-                        <option [value]="AlertType.INFO">ℹ️</option>
-                        <option [value]="AlertType.SUCCESS">✅</option>
-                        <option [value]="AlertType.WARNING">⚠️</option>
-                        <option [value]="AlertType.ERROR">🚨</option>
-                      </select>
-                    </div>
-                    <div class="flex-1 space-y-2">
-                      <input type="text" [(ngModel)]="block.data.title" class="bg-transparent font-bold text-slate-900 dark:text-white w-full border-none p-0 focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500" placeholder="Título do Alerta (Opcional)">
-                      <textarea [(ngModel)]="block.data.message" rows="2" class="bg-transparent text-sm text-slate-700 dark:text-slate-300 w-full border-none p-0 focus:ring-0 resize-none placeholder-slate-400 dark:placeholder-slate-500" placeholder="Mensagem do alerta..."></textarea>
-                    </div>
-                  </div>
-                }
-
-                @case (BlockType.COMPARISON) {
-                  <div class="space-y-6">
-                    <div class="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
-                      <span class="text-xl">↔️</span>
-                      <h4 class="font-bold text-slate-700 dark:text-white text-sm uppercase">Comparativo Antes & Depois</h4>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div class="space-y-4 p-4 rounded-xl bg-red-50/30 dark:bg-red-950/30 border border-red-100 dark:border-red-900">
-                        <label class="label-field text-red-600 dark:text-red-400">❌ Versão Anterior</label>
-                        <div class="aspect-video bg-white dark:bg-slate-900 rounded-lg border-2 border-dashed border-red-200 dark:border-red-800 flex items-center justify-center overflow-hidden">
-                          <img *ngIf="block.data.imageBefore" [src]="block.data.imageBefore" class="w-full h-full object-contain">
-                          <span *ngIf="!block.data.imageBefore" class="text-red-200 dark:text-red-900 text-3xl">🖼️</span>
-                        </div>
-                        <input type="text" [(ngModel)]="block.data.imageBefore" class="input-field font-mono text-xs" placeholder="URL da imagem (Antes)">
-                        <input type="text" [(ngModel)]="block.data.captionBefore" class="input-field text-xs" placeholder="Legenda (ex: Tela antiga)">
-                      </div>
-
-                      <div class="space-y-4 p-4 rounded-xl bg-green-50/30 dark:bg-green-950/30 border border-green-100 dark:border-green-900">
-                        <label class="label-field text-green-600 dark:text-green-400">✅ Nova Versão</label>
-                        <div class="aspect-video bg-white dark:bg-slate-900 rounded-lg border-2 border-dashed border-green-200 dark:border-green-800 flex items-center justify-center overflow-hidden">
-                          <img *ngIf="block.data.imageAfter" [src]="block.data.imageAfter" class="w-full h-full object-contain">
-                          <span *ngIf="!block.data.imageAfter" class="text-green-200 dark:text-green-900 text-3xl">✨</span>
-                        </div>
-                        <input type="text" [(ngModel)]="block.data.imageAfter" class="input-field font-mono text-xs" placeholder="URL da imagem (Depois)">
-                        <input type="text" [(ngModel)]="block.data.captionAfter" class="input-field text-xs" placeholder="Legenda (ex: Tela nova)">
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                @case (BlockType.MODULE_HIGHLIGHT) {
-                  <div class="space-y-6">
-                    <div class="flex gap-6 items-start">
-                      <div class="w-20 h-20 bg-slate-50 dark:bg-slate-800 border dark:border-slate-600 rounded-xl flex items-center justify-center text-4xl overflow-hidden flex-shrink-0">
-                        <img *ngIf="block.data.iconUrl" [src]="block.data.iconUrl" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-                        <span class="hidden">⭐</span>
-                      </div>
-                      <div class="flex-1 space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label class="label-field">Ícone</label>
-                            <input type="text" [(ngModel)]="block.data.iconUrl" class="input-field" placeholder="⭐ ou URL">
-                          </div>
-                          <div>
-                            <label class="label-field">Estilo</label>
-                            <select [(ngModel)]="block.data.variant" class="input-field">
-                              <option value="primary">🔵 Padrão</option>
-                              <option value="secondary">🟣 Secundário</option>
-                              <option value="accent">💗 Destaque</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div>
-                          <input type="text" [(ngModel)]="block.data.title" class="input-seamless text-2xl font-bold text-slate-800 dark:text-white" placeholder="Nome do Módulo">
-                          <textarea [(ngModel)]="block.data.subtitle" rows="1" class="input-seamless text-base text-slate-500 dark:text-slate-400" placeholder="Subtítulo ou slogan..."></textarea>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="bg-slate-50/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-100 dark:border-slate-800">
-                      <label class="label-field mb-2">✨ Funcionalidades</label>
-                      <div class="space-y-2">
-                        @for (feat of getFeatures(block.data); track $index; let fIndex = $index) {
-                          <div class="flex items-center gap-3 bg-white dark:bg-slate-900 p-2 rounded-lg border border-transparent hover:border-blue-200 dark:hover:border-blue-800 shadow-sm group/feat">
-                            <span class="text-green-500 pl-2">✓</span>
-                            <input
-                              [ngModel]="feat"
-                              (ngModelChange)="updateFeature(i, fIndex, $event)"
-                              class="input-seamless text-sm text-slate-700 dark:text-slate-200"
-                              placeholder="Descreva a funcionalidade...">
-                            <button (click)="removeFeature(i, fIndex)" class="btn-icon-ghost">✕</button>
-                          </div>
-                        }
-                      </div>
-                      <button (click)="addFeature(i)" class="btn-small-dashed mt-4">+ Adicionar Funcionalidade</button>
-                    </div>
-                  </div>
-                }
-
-                @case (BlockType.CHECKLIST) {
-                  <div>
-                    <input type="text" [(ngModel)]="block.data.title" class="input-seamless font-bold text-slate-700 dark:text-white mb-3" placeholder="Título da Lista">
-                    <div class="space-y-2">
-                      @for (item of getChecklistItems(block.data); track $index; let j = $index) {
-                        <div class="checklist-row group">
-                          <input type="checkbox" [(ngModel)]="item.checked" class="checklist-checkbox">
-                          <input type="text" [(ngModel)]="item.text" class="input-seamless py-1 text-sm text-slate-700 dark:text-slate-200" placeholder="Item da tarefa...">
-                          <button (click)="removeChecklistItem(i, j)" class="btn-icon-ghost">✕</button>
-                        </div>
-                      }
-                    </div>
-                    <button (click)="addChecklistItem(i)" class="btn-small-dashed mt-3">+ Adicionar Item</button>
-                  </div>
-                }
-
-                @case (BlockType.TIMELINE) {
-                  <div>
-                    <input type="text" [(ngModel)]="block.data.title" class="input-seamless font-bold text-xl mb-6 text-slate-800 dark:text-white" placeholder="Nome do Cronograma">
-                    <div class="space-y-4 relative pl-4 border-l-2 border-slate-100 dark:border-slate-800 ml-3">
-                      @for (step of getSteps(block.data); track $index; let sIndex = $index) {
-                        <div class="timeline-row relative">
-                          <div class="absolute -left-[29px] top-6 h-3 w-3 rounded-full bg-white dark:bg-slate-900 border-2 border-blue-500"></div>
-                          <div class="flex-1 space-y-3">
-                            <div class="flex flex-wrap gap-3">
-                              <input type="text" [(ngModel)]="step.title" class="input-field flex-1 font-semibold" placeholder="Nome da Etapa">
-                              <select [(ngModel)]="step.status" class="input-field w-32 text-xs">
-                                <option value="pending">Pendente</option>
-                                <option value="active">Em Curso</option>
-                                <option value="completed">Feito</option>
-                              </select>
-                            </div>
-                            <textarea [(ngModel)]="step.description" rows="2" class="input-field text-xs resize-none" placeholder="Descrição..."></textarea>
-                          </div>
-                          <button (click)="removeTimelineStep(i, sIndex)" class="text-slate-300 dark:text-slate-600 hover:text-red-500 self-start">✕</button>
-                        </div>
-                      }
-                    </div>
-                    <button (click)="addTimelineStep(i)" class="btn-small-dashed mt-4 ml-3" style="width: calc(100% - 0.75rem)">+ Nova Etapa</button>
-                  </div>
-                }
-
-                @case (BlockType.IMAGE) {
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="aspect-video bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center border border-slate-100 dark:border-slate-700 overflow-hidden">
-                      <img *ngIf="block.data.url" [src]="block.data.url" class="w-full h-full object-contain">
-                      <span *ngIf="!block.data.url" class="text-slate-300 dark:text-slate-600 text-4xl">🖼️</span>
-                    </div>
-                    <div class="space-y-4">
-                      <div>
-                        <label class="label-field">URL da Imagem</label>
-                        <input type="text" [(ngModel)]="block.data.url" class="input-field font-mono text-xs" placeholder="https://...">
-                      </div>
-                      <div>
-                        <label class="label-field">Legenda / Alt</label>
-                        <input type="text" [(ngModel)]="block.data.alt" class="input-field" placeholder="Descrição">
-                      </div>
-                      <div>
-                        <label class="label-field">Tamanho</label>
-                        <select [(ngModel)]="block.data.width" class="input-field">
-                          <option value="full">100%</option>
-                          <option value="medium">Médio</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                @default {
-                  <div class="p-4 text-center text-slate-400 italic">
-                    Bloco {{ block.type }} sem editor visual configurado.
-                  </div>
-                }
-
-              }
+              <div class="flex-1">
+                <p class="text-xs text-gray-500 leading-relaxed">
+                  Recomendado: 1200x630px (aspecto 16:9).<br>
+                  Tamanho máximo sugerido: 2MB.
+                </p>
+              </div>
             </div>
           </div>
-        }
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="col-span-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+              <input type="text" formControlName="title" (input)="generateSlug()"
+                     class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Slug (URL)</label>
+              <input type="text" formControlName="slug"
+                     class="w-full rounded-lg border-gray-300 bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Versão</label>
+              <input type="text" formControlName="version" placeholder="ex: 1.0.0"
+                     class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-sm font-medium text-gray-700">Resumo</label>
+              <span class="text-xs text-gray-400">
+      {{ form.get('summary')?.value?.length || 0 }}/500
+    </span>
+            </div>
+
+            <textarea formControlName="summary" rows="3"
+                      maxlength="500"
+                      class="w-full rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      [class.border-red-500]="form.get('summary')?.invalid && form.get('summary')?.touched">
+  </textarea>
+
+            <p *ngIf="form.get('summary')?.hasError('maxlength')" class="mt-1 text-xs text-red-500">
+              O resumo não pode ultrapassar 500 caracteres.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input type="checkbox" formControlName="isPublished" id="isPublished" class="rounded text-blue-600 focus:ring-blue-500">
+            <label for="isPublished" class="text-sm font-medium text-gray-700">Publicar imediatamente</label>
+          </div>
+
+          <div class="mt-8 border-t border-gray-100 pt-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Conteúdo da Release</h3>
+
+            <app-block-manager
+              [blocks]="blocks()"
+              (blocksChange)="updateBlocks($event)">
+            </app-block-manager>
+
+          </div>
+
+          <div class="pt-6 border-t border-gray-100 flex justify-end">
+            <button type="submit"
+                    [disabled]="isLoading() || form.invalid"
+                    class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              {{ isLoading() ? 'Salvando...' : 'Salvar Release' }}
+            </button>
+          </div>
+
+        </form>
       </div>
+    </div>
 
-      <div class="pt-12 pb-20 border-t border-slate-100 dark:border-slate-800">
-        <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest text-center mb-6">Inserir Elemento</h3>
-        <div class="add-block-grid">
-          @for (opt of blockOptions; track opt.type) {
-            <button (click)="addBlock(opt.type)" class="add-block-btn group">
-              <div class="w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-300"
-                   [ngClass]="{
-                  'bg-blue-50 text-blue-500 dark:bg-blue-900/30 dark:text-blue-300': opt.type === BlockType.HEADER,
-                  'bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400': opt.type === BlockType.TEXT,
-                  'bg-purple-50 text-purple-500 dark:bg-purple-900/30 dark:text-purple-300': opt.type === BlockType.IMAGE,
-                  'bg-amber-50 text-amber-500 dark:bg-amber-900/30 dark:text-amber-300': opt.type === BlockType.ALERT,
-                  'bg-emerald-50 text-emerald-500 dark:bg-emerald-900/30 dark:text-emerald-300': opt.type === BlockType.CHECKLIST,
-                  'bg-rose-50 text-rose-500 dark:bg-rose-900/30 dark:text-rose-300': opt.type === BlockType.COMPARISON,
-                  'bg-indigo-50 text-indigo-500 dark:bg-indigo-900/30 dark:text-indigo-300': opt.type === BlockType.MODULE_HIGHLIGHT,
-                  'bg-cyan-50 text-cyan-500 dark:bg-cyan-900/30 dark:text-cyan-300': opt.type === BlockType.TIMELINE
-                }">
-                <span class="text-2xl">{{ opt.icon }}</span>
+    <!-- SIDEBAR LATERAL - Blocos disponíveis -->
+    <div class="w-80 p-6 pl-3">
+      <div class="sticky top-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 class="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider flex items-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Adicionar Bloco
+          </h3>
+
+          <div class="space-y-2">
+            <button type="button"
+                    (click)="addBlockFromSidebar('HEADER')"
+                    class="w-full flex items-start gap-3 p-3 rounded-lg border-2 border-gray-100 hover:border-purple-300 hover:bg-purple-50/50 transition-all text-left group">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white text-lg">
+                📝
               </div>
-
-              <div class="flex flex-col">
-                <span class="text-xs font-bold text-slate-700 dark:text-white group-hover:text-slate-900 dark:group-hover:text-slate-200">{{ opt.label }}</span>
-                @if (opt.desc) {
-                  <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium hidden sm:block">{{ opt.desc }}</span>
-                }
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-900 text-sm group-hover:text-purple-700">Título</div>
+                <div class="text-xs text-gray-500">Adicione um cabeçalho</div>
               </div>
             </button>
-          }
-        </div>
-      </div>
 
-    </div>
-
-    <div class="lg:col-span-4 space-y-6">
-      <div class="editor-panel p-6 sticky top-28" [formGroup]="form">
-        <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide mb-6 border-b border-slate-100 dark:border-slate-800 pb-2">Configurações</h3>
-
-        <div class="space-y-5">
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="label-field">Status</label>
-              <select formControlName="status" class="input-field cursor-pointer">
-                <option value="draft">Rascunho</option>
-                <option value="published">Publicado</option>
-                <option value="archived">Arquivado</option>
-              </select>
-            </div>
-            <div>
-              <label class="label-field">Data</label>
-              <input formControlName="date" type="date" class="input-field cursor-pointer">
-            </div>
-          </div>
-
-          <div>
-            <label class="label-field">Categoria</label>
-            <select formControlName="category" class="input-field cursor-pointer">
-              <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="label-field">Versão</label>
-            <div class="relative">
-              <span class="absolute left-3 top-2.5 text-slate-400 font-mono text-xs">v</span>
-              <input formControlName="version" type="text" class="input-field pl-6 font-mono" placeholder="1.0.0">
-            </div>
-          </div>
-
-          <div>
-            <label class="label-field">Capa</label>
-            <div class="relative group">
-              <div class="h-32 w-full bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden mb-2 flex items-center justify-center">
-                <img *ngIf="form.get('coverImage')?.value" [src]="form.get('coverImage')?.value" class="w-full h-full object-cover">
-                <span *ngIf="!form.get('coverImage')?.value" class="text-slate-300 dark:text-slate-600 text-sm">Sem Capa</span>
+            <button type="button"
+                    (click)="addBlockFromSidebar('TEXT')"
+                    class="w-full flex items-start gap-3 p-3 rounded-lg border-2 border-gray-100 hover:border-blue-300 hover:bg-blue-50/50 transition-all text-left group">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-lg">
+                📄
               </div>
-              <input formControlName="coverImage" type="text" class="input-field text-xs" placeholder="https://...">
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-900 text-sm group-hover:text-blue-700">Texto</div>
+                <div class="text-xs text-gray-500">Escreva um parágrafo</div>
+              </div>
+            </button>
+
+            <button type="button"
+                    (click)="addBlockFromSidebar('IMAGE')"
+                    class="w-full flex items-start gap-3 p-3 rounded-lg border-2 border-gray-100 hover:border-pink-300 hover:bg-pink-50/50 transition-all text-left group">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center text-white text-lg">
+                🖼️
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-900 text-sm group-hover:text-pink-700">Imagem</div>
+                <div class="text-xs text-gray-500">Insira uma foto</div>
+              </div>
+            </button>
+
+            <button type="button"
+                    (click)="addBlockFromSidebar('ALERT')"
+                    class="w-full flex items-start gap-3 p-3 rounded-lg border-2 border-gray-100 hover:border-yellow-300 hover:bg-yellow-50/50 transition-all text-left group">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center text-white text-lg">
+                💡
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-900 text-sm group-hover:text-yellow-700">Aviso</div>
+                <div class="text-xs text-gray-500">Destaque importante</div>
+              </div>
+            </button>
+
+            <button type="button"
+                    (click)="addBlockFromSidebar('CHECKLIST')"
+                    class="w-full flex items-start gap-3 p-3 rounded-lg border-2 border-gray-100 hover:border-green-300 hover:bg-green-50/50 transition-all text-left group">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-lg">
+                ✓
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-900 text-sm group-hover:text-green-700">Tarefas</div>
+                <div class="text-xs text-gray-500">Lista de verificação</div>
+              </div>
+            </button>
+
+            <button type="button"
+                    (click)="addBlockFromSidebar('MODULE_HIGHLIGHT')"
+                    class="w-full flex items-start gap-3 p-3 rounded-lg border-2 border-gray-100 hover:border-rose-300 hover:bg-rose-50/50 transition-all text-left group">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center text-white text-lg">
+                ⭐
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-900 text-sm group-hover:text-rose-700">Destaque</div>
+                <div class="text-xs text-gray-500">Card especial</div>
+              </div>
+            </button>
+
+            <button type="button"
+                    (click)="addBlockFromSidebar('COMPARISON')"
+                    class="w-full flex items-start gap-3 p-3 rounded-lg border-2 border-gray-100 hover:border-cyan-300 hover:bg-cyan-50/50 transition-all text-left group">
+              <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-white text-lg">
+                ↔️
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-900 text-sm group-hover:text-cyan-700">Comparação</div>
+                <div class="text-xs text-gray-500">Antes e Depois</div>
+              </div>
+            </button>
+
+          </div>
+
+
+          <div class="mt-6 pt-6 border-t border-gray-100">
+            <div class="flex items-start gap-2 text-xs text-gray-500">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 mt-0.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>Clique em um tipo de bloco para adicioná-lo ao conteúdo da release</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info adicional -->
+        <div class="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-100">
+          <div class="flex items-start gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="flex-shrink-0 mt-0.5 text-blue-600">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
+            <div class="text-xs text-blue-800">
+              <div class="font-semibold mb-1">Dica:</div>
+              <div class="text-blue-700">Você pode reorganizar os blocos usando os botões de seta ⬆️⬇️ após adicioná-los.</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-  </main>
+  </div>
 </div>

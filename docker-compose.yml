@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: inforplace-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-portal_inforplace_dev}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - inforplace-network
+
+  api:
+    # AQUI ESTÁ A MUDANÇA: Indicamos a pasta do backend
+    build: 
+      context: ./backend-api
+      dockerfile: Dockerfile
+    container_name: portal-inforplace-api
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-portal_inforplace_dev}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-postgres}
+      - SPRING_PROFILES_ACTIVE=dev
+      - JWT_SECRET=wcdIjgaHYz8GnVdEDyJGwLkj/FAx14BcveW33wz0BzE=
+    depends_on:
+      - postgres
+    networks:
+      - inforplace-network
+
+volumes:
+  postgres_data:
+
+networks:
+  inforplace-network:
+    driver: bridge

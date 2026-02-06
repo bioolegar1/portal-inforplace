@@ -5,35 +5,35 @@ import { ReleaseService } from '../../../../core/services/release.service';
 import { ReleaseNote } from '../../../../core/models/release-note.model';
 import {BlockRendererComponent} from '../../../../ui/blocks/block-renderer/block-renderer.component';
 // 👇 Importação do seu Renderizador de Blocos
-
 @Component({
   selector: 'app-release-detail',
   standalone: true,
-  // 👇 Adicione o BlockRendererComponent aqui nos imports
   imports: [CommonModule, BlockRendererComponent],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 pb-12 transition-colors duration-300">
 
       @if (loading()) {
-        <div class="container mx-auto px-4 py-8 animate-pulse">
-          <div class="h-8 bg-gray-200 dark:bg-gray-700 w-32 mb-6 rounded"></div>
-          <div class="h-64 bg-gray-200 dark:bg-gray-700 w-full rounded-lg mb-8"></div>
-          <div class="h-10 bg-gray-200 dark:bg-gray-700 w-3/4 mb-4 rounded"></div>
+        <div class="container mx-auto px-4 py-8 animate-pulse max-w-4xl">
+          <div class="h-64 bg-gray-200 dark:bg-gray-800 w-full rounded-2xl mb-8"></div>
+          <div class="h-8 bg-gray-200 dark:bg-gray-800 w-32 mb-6 rounded"></div>
+          <div class="h-10 bg-gray-200 dark:bg-gray-800 w-3/4 mb-4 rounded"></div>
           <div class="space-y-3">
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 w-full rounded"></div>
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 w-full rounded"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-800 w-full rounded"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-800 w-full rounded"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-800 w-2/3 rounded"></div>
           </div>
         </div>
       }
 
       @else if (error()) {
-        <div class="container mx-auto px-4 py-16 text-center">
-          <div class="bg-red-50 border border-red-200 rounded-lg p-8 inline-block max-w-md">
-            <h2 class="text-xl font-bold text-red-800 mb-2">Erro ao carregar nota</h2>
-            <p class="text-red-600 mb-4">{{ error() }}</p>
+        <div class="container mx-auto px-4 py-20 text-center">
+          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-8 inline-block max-w-md">
+            <div class="text-4xl mb-4">😕</div>
+            <h2 class="text-xl font-bold text-red-800 dark:text-red-400 mb-2">Ops! Algo deu errado.</h2>
+            <p class="text-red-600 dark:text-red-300 mb-6">{{ error() }}</p>
             <button
               (click)="goBack()"
-              class="px-4 py-2 bg-white text-red-700 border border-red-300 rounded hover:bg-red-50 transition-colors"
+              class="px-6 py-2 bg-white dark:bg-slate-800 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors shadow-sm"
             >
               Voltar para a lista
             </button>
@@ -44,67 +44,72 @@ import {BlockRendererComponent} from '../../../../ui/blocks/block-renderer/block
       @else {
         @if (release(); as item) {
 
-          <div class="relative w-full h-64 md:h-80 lg:h-96 bg-gray-800">
+          <div class="relative w-full h-[400px] md:h-[500px] bg-slate-900 overflow-hidden">
             @if (item.coverImage) {
-              <img
-                [src]="item.coverImage"
-                [alt]="item.title"
-                class="w-full h-full object-cover opacity-60"
-              />
+              <div class="absolute inset-0">
+                <img [src]="item.coverImage" [alt]="item.title" class="w-full h-full object-cover opacity-50 blur-sm scale-105">
+              </div>
             } @else {
-              <div class="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-                <span class="text-white text-opacity-10 text-8xl font-bold tracking-tighter">IP</span>
+              <div class="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center opacity-50">
+                <span class="text-white/5 text-9xl font-black tracking-tighter select-none">IP</span>
               </div>
             }
 
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-50 dark:from-gray-900 via-transparent to-black/30"></div>
+
             <button
               (click)="goBack()"
-              class="absolute top-6 left-4 md:left-8 bg-white/90 dark:bg-gray-800/90 hover:bg-white text-gray-800 dark:text-white px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm transition-all flex items-center gap-2 font-medium z-20"
+              class="absolute top-6 left-6 z-30 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-2 text-sm font-medium transition-all border border-white/20"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
               Voltar
             </button>
 
-            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-90"></div>
-          </div>
+            <div class="absolute bottom-0 left-0 w-full z-20 pb-16 pt-32 bg-gradient-to-t from-gray-50 dark:from-gray-900 to-transparent">
+              <div class="container mx-auto px-4 max-w-4xl">
 
-          <article class="container mx-auto px-4 -mt-32 relative z-10 pb-20">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden p-6 md:p-12 border border-gray-100 dark:border-gray-700">
-
-              <header class="mb-10 border-b border-gray-100 dark:border-gray-700 pb-8">
-                <div class="flex flex-wrap items-center gap-4 mb-6">
-                  <span class="px-3 py-1 bg-blue-50 text-blue-700 font-semibold rounded-full text-xs uppercase tracking-wide">
+                <div class="flex flex-wrap items-center gap-3 mb-4 animate-fade-in-up">
+                  <span class="px-3 py-1 bg-blue-600 text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-lg shadow-blue-900/20">
                     {{ item.category || 'Geral' }}
                   </span>
 
-                  @if (item.version) {
-                    <span class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-mono text-xs rounded-full">
-                      v{{ item.version }}
-                    </span>
-                  }
+                  <span class="px-3 py-1 bg-white/20 backdrop-blur-md text-slate-800 dark:text-white border border-white/30 text-xs font-mono font-semibold rounded-full">
+                    v{{ item.version }}
+                  </span>
 
-                  <div class="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm ml-auto">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  <span class="text-slate-500 dark:text-slate-400 text-sm font-medium ml-auto flex items-center gap-1.5">
+                    <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     {{ formatDate(item.publishedAt || item.createdAt) }}
-                  </div>
+                  </span>
                 </div>
 
-                <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white leading-tight mb-6 animate-fade-in-up delay-100 drop-shadow-sm">
                   {{ item.title }}
                 </h1>
 
                 @if (item.summary) {
-                  <p class="mt-4 text-xl text-gray-500 dark:text-gray-400 font-light leading-relaxed">
+                  <p class="text-xl md:text-2xl text-slate-600 dark:text-slate-300 font-light leading-relaxed max-w-3xl animate-fade-in-up delay-200">
                     {{ item.summary }}
                   </p>
                 }
-              </header>
+              </div>
+            </div>
+          </div>
+
+          <article class="container mx-auto px-4 max-w-4xl relative z-10">
+            <div class="prose prose-lg dark:prose-invert max-w-none">
 
               @if (item.blocks && item.blocks.length > 0) {
                 <app-block-renderer [blocks]="item.blocks"></app-block-renderer>
-              } @else {
-                <div class="prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300">
-                  <div [innerHTML]="item.content"></div>
+              }
+
+              @else if (item.content) {
+                <div [innerHTML]="item.content"></div>
+              }
+
+              @else {
+                <div class="py-12 text-center text-slate-400 italic bg-slate-100 dark:bg-slate-800/50 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                  Esta nota de atualização não possui conteúdo detalhado.
                 </div>
               }
 
@@ -125,33 +130,47 @@ export class ReleaseDetailComponent implements OnInit {
   private releaseService = inject(ReleaseService);
 
   ngOnInit(): void {
-    this.fetchRelease();
+    // Escuta mudanças na rota para recarregar se o slug mudar
+    this.route.paramMap.subscribe(params => {
+      const slug = params.get('slug');
+      if (slug) {
+        this.fetchRelease(slug);
+      } else {
+        this.error.set('Identificador da nota não encontrado.');
+        this.loading.set(false);
+      }
+    });
   }
 
-  fetchRelease(): void {
-    const slug = this.route.snapshot.paramMap.get('slug');
-
-    if (!slug) {
-      this.error.set('Identificador da nota não encontrado.');
-      this.loading.set(false);
-      return;
-    }
-
+  fetchRelease(slug: string): void {
     this.loading.set(true);
+    this.error.set(null);
 
     this.releaseService.getReleaseBySlug(slug).subscribe({
       next: (data) => {
-        // Garantir que blocks seja um array, mesmo que venha null do back
-        const safeData = {
+        // =========================================================
+        // 🔧 MAPEAMENTO CRÍTICO (Backend Java -> Frontend Angular)
+        // =========================================================
+        // O Java manda 'contentBlocks'. O Front espera 'blocks'.
+        // Mapeamos aqui para garantir que o renderizador funcione.
+        const blocksMapped = data.contentBlocks || data.blocks || [];
+
+        const safeData: ReleaseNote = {
           ...data,
-          blocks: data.blocks || []
+          blocks: blocksMapped,
+          // Garante uma categoria padrão se o backend mandar null
+          category: data.category || 'Geral'
         };
+
         this.release.set(safeData);
         this.loading.set(false);
+
+        // (Opcional) Registrar visualização silenciosamente
+        // this.releaseService.incrementViewCount(slug).subscribe();
       },
       error: (err) => {
-        console.error(err);
-        this.error.set('Não foi possível carregar os detalhes desta atualização.');
+        console.error('Erro ao buscar release:', err);
+        this.error.set('Não foi possível carregar os detalhes desta atualização. Verifique sua conexão.');
         this.loading.set(false);
       }
     });
@@ -163,10 +182,14 @@ export class ReleaseDetailComponent implements OnInit {
 
   formatDate(dateStr: string | undefined): string {
     if (!dateStr) return '';
-    return new Date(dateStr).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    });
+    try {
+      return new Date(dateStr).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+    } catch (e) {
+      return dateStr;
+    }
   }
 }

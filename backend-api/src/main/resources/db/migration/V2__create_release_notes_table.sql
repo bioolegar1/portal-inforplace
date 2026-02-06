@@ -5,7 +5,7 @@ CREATE TABLE release_notes (
                                 title VARCHAR(200) NOT NULL,
                                 slug VARCHAR(200) UNIQUE NOT NULL,
                                 summary TEXT,
-                                cover_image VARCHAR(500),
+                                cover_image TEXT,
 
     -- JSONB para blocos de conteúdo
                                 content_blocks JSONB NOT NULL DEFAULT '[]'::jsonb,

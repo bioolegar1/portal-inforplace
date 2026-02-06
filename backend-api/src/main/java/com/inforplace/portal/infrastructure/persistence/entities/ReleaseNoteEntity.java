@@ -34,7 +34,7 @@ public class ReleaseNoteEntity {
     @Column(columnDefinition = "TEXT")
     private String summary;
 
-    @Column(name = "cover_image", length = 500)
+    @Column(columnDefinition = "TEXT")
     private String coverImage;
 
     // JSONB - CORE DO SISTEMA

@@ -1,39 +1,47 @@
-<div class="min-h-screen bg-gray-900 flex flex-col items-center justify-center text-white relative overflow-hidden">
+<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+  @for (release of releases(); track release.id) {
+    <article class="group bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full">
 
-  <div class="absolute inset-0 bg-gradient-to-br from-gray-900 to-gray-800 z-0"></div>
-  <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#16a34a] opacity-10 rounded-full blur-[100px] -mr-20 -mt-20"></div>
+      <a [routerLink]="['/releases', release.slug]" class="block aspect-video overflow-hidden bg-slate-100 dark:bg-slate-900 relative">
+        @if (release.coverImage) {
+          <img [src]="release.coverImage" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" alt="Capa">
+        } @else {
+          <div class="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600 text-4xl">
+            🖼️
+          </div>
+        }
 
-  <div class="relative z-10 text-center px-4 max-w-3xl">
-
-    <div class="flex justify-center mb-8">
-      <div class="w-16 h-16 bg-[#16a34a] rounded-xl flex items-center justify-center text-4xl font-bold shadow-lg shadow-green-900/50">
-        i
-      </div>
-    </div>
-
-    <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
-      Inforplace <span class="text-[#16a34a]">Sistemas</span>
-    </h1>
-
-    <p class="text-xl text-gray-400 mb-12">
-      Soluções em tecnologia para gestão empresarial.
-      <br>Simplificando processos, ampliando resultados.
-    </p>
-
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <button class="px-8 py-4 bg-white text-gray-900 font-bold rounded-xl hover:bg-gray-100 transition-colors">
-        Acessar Área do Cliente
-      </button>
-
-      <a routerLink="/releases" class="px-8 py-4 bg-[#16a34a]/10 border border-[#16a34a]/30 text-[#16a34a] font-bold rounded-xl hover:bg-[#16a34a]/20 transition-all flex items-center justify-center gap-2 cursor-pointer">
-        <span>Ver Notas de Atualização</span>
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+        @if (release.category) {
+          <div class="absolute top-4 left-4">
+            <span class="px-3 py-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur text-xs font-bold uppercase tracking-wider rounded-full shadow-sm text-blue-600">
+              {{ release.category }}
+            </span>
+          </div>
+        }
       </a>
-    </div>
 
-  </div>
+      <div class="p-6 flex flex-col flex-1">
+        <div class="flex items-center gap-2 text-xs font-medium text-slate-400 mb-3">
+          <span>{{ release.publishedAt | date:'dd/MM/yyyy' }}</span>
+          <span>•</span>
+          <span class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded text-[10px] font-mono">v{{ release.version }}</span>
+        </div>
 
-  <footer class="absolute bottom-8 text-gray-600 text-sm">
-    © 2026 Inforplace Sistemas
-  </footer>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+          <a [routerLink]="['/releases', release.slug]">
+            {{ release.title }}
+          </a>
+        </h2>
+
+        <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-3 mb-6 flex-1">
+          {{ release.summary }}
+        </p>
+
+        <a [routerLink]="['/releases', release.slug]" class="inline-flex items-center font-bold text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+          Ler detalhes
+          <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+      </div>
+    </article>
+  }
 </div>

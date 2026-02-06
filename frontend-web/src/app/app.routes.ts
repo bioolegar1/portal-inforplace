@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import {authGuard} from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // =========================================================
@@ -79,6 +80,7 @@ export const routes: Routes = [
     path: 'admin',
     // Carrega o Layout que segura todas as páginas internas
     loadComponent: () => import('./features/admin/layout/layout.component').then(m => m.AdminLayoutComponent),
+    canActivate: [authGuard], // <--- ADICIONE ESTA LINHA: Protege o admin e todos os filhos
     children: [
       // Se acessar /admin direto, joga para o dashboard
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -97,16 +99,16 @@ export const routes: Routes = [
         loadComponent: () => import('./features/admin/releases/release-list/release-list.component').then(m => m.ReleaseListComponent)
       },
 
-      // Editor de Releases (Criar Novo)
+// Editor de Releases (Criar Novo)
       {
         path: 'releases/new',
         title: 'Nova Release',
         loadComponent: () => import('./features/admin/releases/release-editor/release-editor.component').then(m => m.ReleaseEditorComponent)
       },
 
-      // Editor de Releases (Editar Existente)
+// Editor de Releases (Editar Existente)
       {
-        path: 'releases/:id',
+        path: 'releases/:id', // O Angular entende que :id é um parâmetro, então /new é verificado primeiro
         title: 'Editar Release',
         loadComponent: () => import('./features/admin/releases/release-editor/release-editor.component').then(m => m.ReleaseEditorComponent)
       },
