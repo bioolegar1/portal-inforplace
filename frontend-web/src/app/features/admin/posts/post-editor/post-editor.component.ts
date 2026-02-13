@@ -27,7 +27,6 @@ export class PostEditorComponent implements OnInit {
   isLoading = signal(false);
   isEditing = signal(false);
 
-  // Listas para os selects no HTML baseadas nos seus Enums
   postTypes = Object.values(PostType);
   systems = Object.values(ProductSystem);
 
@@ -40,10 +39,9 @@ export class PostEditorComponent implements OnInit {
     this.form = this.fb.group({
       title: ['', Validators.required],
       slug: ['', Validators.required],
-      type: [PostType.TUTORIAL, Validators.required], // Padrão Tutorial
-      productSystem: [ProductSystem.PILLAR, Validators.required], // Padrão Pillar
-      version: [''], // Agora opcional
-      category: [''],
+      type: [PostType.TUTORIAL, Validators.required],
+      productSystem: [ProductSystem.PILLAR, Validators.required],
+      version: [''],
       summary: ['', [Validators.required, Validators.maxLength(500)]],
       coverImage: [''],
       isPublished: [false]
@@ -57,8 +55,6 @@ export class PostEditorComponent implements OnInit {
       this.loadPost(Number(id));
     }
   }
-
-  // --- LÓGICA DO EDITOR ---
 
   loadPost(id: number) {
     this.isLoading.set(true);
@@ -90,12 +86,6 @@ export class PostEditorComponent implements OnInit {
     const type = BlockType[blockType as keyof typeof BlockType];
     if (type && this.blockManager) {
       this.blockManager.addBlock(type);
-      setTimeout(() => {
-        const blocks = document.querySelectorAll('.block-card');
-        if (blocks.length > 0) {
-          blocks[blocks.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 100);
     }
   }
 
@@ -104,9 +94,14 @@ export class PostEditorComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.isLoading.set(true);
+
+    // Lógica: Criamos o objeto postData unindo os dados do formulário com os blocos
     const postData: PostRequest = {
       ...this.form.value,
       contentBlocks: this.blocks()
@@ -118,15 +113,18 @@ export class PostEditorComponent implements OnInit {
       : this.postService.createPost(postData);
 
     operation.subscribe({
-      next: () => this.router.navigate(['/admin/posts']).then(),
+      next: () => {
+        this.isLoading.set(false);
+        this.router.navigate(['/admin/posts']).then();
+      },
       error: (err: any) => {
         this.isLoading.set(false);
+        console.error('Erro ao salvar:', err);
         alert('Erro ao salvar os dados no servidor.');
       }
     });
   }
 
-  // --- UPLOAD DE IMAGEM ---
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {

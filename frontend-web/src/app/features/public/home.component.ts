@@ -45,35 +45,35 @@ export class HomeComponent implements OnInit {
       name: 'Custo de Obras',
       description: 'Gestão contábil e fiscal da construção civil e empreendimentos imobiliários, de acordo com as normas.',
       icon: 'custodeobras.png',
-      print: 'Sao-tela.avif'
+      print: 'Sao-tela.jpg'
     },
     {
       id: 'pvinfo',
       name: 'Ponto de Venda - PDV',
       description: 'Aumente a eficiência de seu PDV. Registre vendas, estoque e ofereça um atendimento rápido aos clientes.',
       icon: 'vendafacil.png',
-      print: 'print-pdv.jpg'
+      print: 'pvinfo-03.avif'
     },
     {
       id: 'notainfo',
       name: 'Nota INFO',
       description: 'Emita nota fiscal eletrônica em poucos cliques. Uma solução simples e fácil de usar para sua empresa.',
       icon: 'custodeobras.png',
-      print: 'print-nfe.jpg'
+      print: 'nfi-01.avif'
     },
     {
       id: 'coletorxml',
       name: 'Coletor XML',
       description: 'Programa que faz a baixa automática de XML de NF-e e CT-e, dando ciência da operação instantaneamente.',
       icon: 'Coletorxml.png',
-      prints: ['print-coletor.png', 'print-coletor-2.png', 'print-coletor-3.png']
+      print: 'print-coletor.png'
     },
     {
       id: 'pillarmobile',
       name: 'Pillar Mobile',
       description: 'Faça a sua gestão de compras de materiais de onde você estiver. Simples e prático! Controle solicitações, autorizações e ordens de compra em tempo real.',
       icon: 'pillar42x42.png',
-      prints: ['print-coletor.png', 'print-coletor-2.png', 'print-coletor-3.png']
+      print: 'app-03.png'
     },
   ]);
 

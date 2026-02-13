@@ -1,12 +1,24 @@
+// src/app/app.routes.server.ts
+
 import { RenderMode, ServerRoute } from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
+  // Lógica: Garante que as rotas administrativas sejam processadas apenas no servidor.
   {
-    path: 'releases/:slug', // A rota dinâmica que estava dando erro
-    renderMode: RenderMode.Server // Define para SSR (renderiza na hora do acesso)
+    path: 'admin/**',
+    renderMode: RenderMode.Server,
   },
+
+  // Lógica: Alterado de 'releases/:slug' para 'posts/:slug' para dar match com o app.routes.ts.
+  // Sem isso, o build falha ao tentar extrair rotas para o Prerender.
   {
-    path: '**', // Todas as outras rotas (Home, Sobre, etc)
-    renderMode: RenderMode.Prerender // Continuam estáticas (mais rápidas)
-  }
+    path: 'posts/:slug',
+    renderMode: RenderMode.Prerender,
+  },
+
+  // Lógica: Rota padrão para as demais páginas do site.
+  {
+    path: '**',
+    renderMode: RenderMode.Prerender,
+  },
 ];

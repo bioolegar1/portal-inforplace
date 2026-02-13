@@ -38,14 +38,15 @@ public class PostEntity { // Renomeado de ReleaseNoteEntity para PostEntity
 
     // NOVO: Campo que define se é Tutorial, Notícia ou Release
     @Enumerated(EnumType.STRING)
-    @Column(name = "post_type", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM) // Esta é a chave para o problema
+    @Column(name = "post_type", columnDefinition = "post_type")
     private PostType type;
 
     // NOVO: Útil para agrupar tutoriais (ex: "Financeiro", "Estoque")
     @Column(length = 100)
     private String category;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT") // Logica: TEXT nao tem o limite de 255 do VARCHAR padrao
     private String summary;
 
     @Column(columnDefinition = "TEXT")
@@ -78,10 +79,13 @@ public class PostEntity { // Renomeado de ReleaseNoteEntity para PostEntity
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-        // Se o tipo for nulo, define um padrão para não quebrar o banco
-        if (this.type == null) this.type = PostType.RELEASE_NOTE;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+
+        // O nome da variável deve coincidir exatamente com o que foi declarado acima
+        if (this.type == null) {
+            this.type = PostType.RELEASE_NOTE;
+        }
     }
 
     @PreUpdate

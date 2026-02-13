@@ -1,60 +1,52 @@
-@if (isLoading()) {
-  <div class="max-w-4xl mx-auto px-4 py-20 text-center">
-    <div class="animate-spin w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-    <p class="text-slate-500 font-medium">Carregando conteudo...</p>
-  </div>
-}
+<div class="min-h-screen bg-white">
 
-@else if (post(); as p) {
-  <article class="max-w-4xl mx-auto px-4 py-12">
+  @if (isLoading()) {
+    <div class="max-w-4xl mx-auto px-4 py-12 animate-pulse">
+      <div class="h-4 bg-slate-200 rounded w-24 mb-6"></div>
+      <div class="h-10 bg-slate-200 rounded w-3/4 mb-4"></div>
+      <div class="aspect-video bg-slate-100 rounded-2xl mb-12"></div>
+    </div>
+  }
+  @else {
+    @if (post(); as p) {
+      <article class="max-w-4xl mx-auto px-4 py-12">
+        <header class="mb-12">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase">
+              {{ p.productSystem }}
+            </span>
+            <span class="text-slate-400 text-sm">
+              {{ (p.publishedAt || p.createdAt) | date:'dd/MM/yyyy' }}
+            </span>
+          </div>
 
-    <header class="mb-12 border-b border-slate-100 pb-8">
-      <div class="flex items-center gap-3 mb-4">
-        <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider">
-          {{ p.productSystem }}
-        </span>
-        <span class="text-slate-400 text-sm">
-          {{ (p.publishedAt || p.createdAt) | date:'dd/MM/yyyy' }}
-        </span>
-      </div>
+          <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-6">
+            {{ p.title }}
+          </h1>
+        </header>
 
-      <h1 class="text-4xl font-extrabold text-slate-900 leading-tight mb-4">
-        {{ p.title }}
-      </h1>
-
-      <div class="flex items-center gap-6 text-slate-500 text-sm font-medium">
-        <span class="flex items-center gap-1.5">
-          Visualizacoes: {{ p.viewCount }}
-        </span>
-        @if (p.version) {
-          <span class="flex items-center gap-1.5 font-mono">
-            Versao: {{ p.version }}
-          </span>
+        @if (p.coverImage) {
+          <div class="mb-12 rounded-3xl overflow-hidden shadow-xl aspect-video bg-slate-50">
+            <img [src]="p.coverImage" [alt]="p.title" class="w-full h-full object-cover">
+          </div>
         }
-      </div>
-    </header>
 
-    @if (p.coverImage) {
-      <div class="mb-12 rounded-2xl overflow-hidden shadow-lg aspect-video bg-slate-100">
-        <img [src]="p.coverImage" [alt]="p.title" class="w-full h-full object-cover">
+        <app-block-renderer [blocks]="p.contentBlocks"></app-block-renderer>
+
+        <footer class="mt-20 pt-10 border-t border-slate-100">
+          <button routerLink="/posts" class="text-blue-600 font-bold hover:text-blue-800">
+            ← Voltar para a Central de Conteúdo
+          </button>
+        </footer>
+      </article>
+    }
+    @else {
+      <div class="max-w-4xl mx-auto px-4 py-20 text-center">
+        <h2 class="text-2xl font-bold text-slate-800">Conteúdo não encontrado</h2>
+        <p class="text-slate-500 mt-2">A postagem que você procura não existe ou foi removida.</p>
+        <a routerLink="/posts" class="mt-6 inline-block text-blue-600 font-bold">Voltar ao Hub</a>
       </div>
     }
+  }
 
-    <app-block-renderer [blocks]="p.contentBlocks"></app-block-renderer>
-
-    <footer class="mt-16 pt-8 border-t border-slate-100">
-      <button routerLink="/posts" class="text-blue-600 font-bold hover:underline">
-        Voltar para a Central de Conteudo
-      </button>
-    </footer>
-
-  </article>
-}
-
-@else {
-  <div class="max-w-4xl mx-auto px-4 py-20 text-center">
-    <h2 class="text-2xl font-bold text-slate-800">Conteudo nao encontrado</h2>
-    <p class="text-slate-500 mt-2">A postagem que voce procura pode ter sido removida ou o link esta incorreto.</p>
-    <a routerLink="/posts" class="mt-6 inline-block text-blue-600 font-bold">Voltar ao Hub</a>
-  </div>
-}
+</div>

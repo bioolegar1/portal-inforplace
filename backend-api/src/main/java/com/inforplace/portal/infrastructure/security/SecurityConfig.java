@@ -1,5 +1,6 @@
 package com.inforplace.portal.infrastructure.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,43 +41,50 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    // CORREÇÃO 1: Removido o 'throws Exception' daqui
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) {
-        try {
-            return authConfig.getAuthenticationManager();
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao carregar o gerenciador de autenticação", e);
-        }
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
-    // CORREÇÃO 2: Removido o 'throws Exception' daqui
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
-        try {
-            http
-                    .cors(Customizer.withDefaults())
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(auth -> auth
-                            .requestMatchers("/api/auth/**").permitAll()
-                            .requestMatchers("/error", "/favicon.ico", "/").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/public/posts/*/view").permitAll()
-                            .requestMatchers("/api/hello", "/api/status").permitAll()
-                            .requestMatchers("/actuator/**").permitAll()
-                            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
-                            .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_EDITOR", "ADMIN", "EDITOR")
-                            .anyRequest().authenticated()
-                    )
-                    .authenticationProvider(authenticationProvider())
-                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                // Lógica: Utiliza o Bean CorsConfigurationSource que você definiu no CorsConfig.java
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
 
-            return http.build();
-        } catch (Exception e) {
-            // Transformamos o erro genérico em um erro de tempo de execução, caso o Spring dispare algo internamente.
-            throw new RuntimeException("Erro ao construir a cadeia de filtros de segurança", e);
-        }
+                // Lógica: Tratamento de exceções para evitar erros genéricos na cadeia de filtros
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("Acesso negado: Token ausente ou invalido.");
+                        })
+                )
+
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .authorizeHttpRequests(auth -> auth
+                        // Lógica: Permissões públicas para o site e documentação
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/error", "/favicon.ico", "/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+
+                        // Lógica: Endpoint de visualizações deve ser acessível sem token
+                        .requestMatchers(HttpMethod.POST, "/api/public/posts/*/view").permitAll()
+
+                        .requestMatchers("/api/hello", "/api/status").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+
+                        // Lógica: Proteção das rotas de edição para Admin/Editor
+                        .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_EDITOR", "ADMIN", "EDITOR")
+
+                        .anyRequest().authenticated()
+                )
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 }

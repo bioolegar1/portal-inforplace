@@ -89,6 +89,14 @@
                       <span class="material-symbols-outlined text-lg">arrow_forward</span>
                     </a>
                   }
+                  @else if (solution.id === 'pillarmobile') {
+                    <a routerLink="/pillarmobile"
+                       [ngClass]="getHeroTheme(solution.id).btn"
+                       class="px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg hover:shadow-2xl hover:-translate-y-1 inline-flex items-center justify-center gap-2 text-sm md:text-base border border-white/20">
+                      Conhecer o Coletor XML
+                      <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </a>
+                  }
                   @else {
                     <a href="#solucoes"
                        [ngClass]="getHeroTheme(solution.id).btn"
