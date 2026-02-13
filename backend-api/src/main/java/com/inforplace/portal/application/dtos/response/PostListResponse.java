@@ -1,5 +1,7 @@
 package com.inforplace.portal.application.dtos.response;
 
+import com.inforplace.portal.domain.enums.PostType;
+import com.inforplace.portal.domain.enums.ProductSystem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +13,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReleaseNoteListResponse {
+public class PostListResponse {
 
     private Long id;
+    private ProductSystem productSystem; // ADICIONE ESTE CAMPO
     private String version;
     private String title;
     private String slug;
+    private PostType type; // Este campo resolve o erro do Builder
+    private String category;
     private String summary;
     private String coverImage;
     private Boolean isPublished;

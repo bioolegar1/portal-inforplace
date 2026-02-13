@@ -4,7 +4,6 @@ package com.inforplace.portal.infrastructure.security;
 import com.inforplace.portal.infrastructure.config.AppProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,11 +32,12 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getJwt().getExpiration());
 
+        assert userDetails != null;
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .subject(userDetails.getUsername()) // Era setSubject
+                .issuedAt(now)                      // Era setIssuedAt
+                .expiration(expiryDate)             // Era setExpiration
+                .signWith(getSigningKey())          // Era signWith(chave, algoritmo)
                 .compact();
     }
 
@@ -45,7 +45,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
+                .parseSignedClaims(token)
                 .getPayload();
 
         return claims.getSubject();
@@ -56,7 +56,7 @@ public class JwtTokenProvider {
             Jwts.parser()
                     .verifyWith(getSigningKey())
                     .build()
-                    .parseClaimsJws(token);
+                    .parseSignedClaims(token);
             return true;
         } catch (Exception e) {
             log.error("Token Inválido: {}", e.getMessage());

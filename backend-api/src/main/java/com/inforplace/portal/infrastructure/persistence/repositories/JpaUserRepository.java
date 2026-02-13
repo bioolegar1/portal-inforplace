@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface JpaUserRepository  extends JpaRepository<UserEntity, Long> {
+public interface JpaUserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
+    @SuppressWarnings("unused")
     boolean existsByEmail(String email);
 }

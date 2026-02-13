@@ -23,5 +23,6 @@ import com.inforplace.portal.domain.enums.BlockType;
 public interface ContentBlock {
     String getId();
     BlockType getType();
+    @SuppressWarnings("unused")
     Integer getOrder();
 }

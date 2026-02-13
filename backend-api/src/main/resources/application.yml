@@ -62,7 +62,6 @@ app:
     upload:
       # AQUI ESTÁ A CONFIGURAÇÃO CORRETA
       # O './' garante que a pasta seja criada na raiz do projeto onde o JAR/Java está rodando
-      dir: ${UPLOAD_DIR:./uploads}
 
   cors:
     # ALTERADO: Adicionado suporte a origens HTTPS para o Angular/React

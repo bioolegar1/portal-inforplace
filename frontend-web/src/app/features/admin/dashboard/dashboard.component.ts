@@ -1,7 +1,9 @@
 import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {AuthService} from '../../../core/services/auth.service';
-import {DashboardService, DashboardStats} from '../../../core/services/dashboard.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { DashboardService } from '../../../core/services/dashboard.service';
+// IMPORTANTE: Importamos o modelo centralizado
+import { DashboardStats } from '../../../core/models/post.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,12 +13,11 @@ import {DashboardService, DashboardStats} from '../../../core/services/dashboard
 })
 export class DashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
-  public authService = inject(AuthService); // Público para usar no template
+  public authService = inject(AuthService);
 
   isLoading = signal(true);
   error = signal('');
 
-  // 1. Saudação dinâmica (Bom dia/tarde/noite)
   greeting = computed(() => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Bom dia';
@@ -24,20 +25,20 @@ export class DashboardComponent implements OnInit {
     return 'Boa noite';
   });
 
-  // 2. Stats formatado como ARRAY para o *ngFor do HTML
-  // Inicializamos com zeros para o layout não quebrar antes de carregar
+  // LÓGICA: Atualizamos o Array de Stats para refletir todos os tipos de posts do Inforplace
   stats = signal([
-    { title: 'Total Releases', value: 0, icon: '📝', color: 'bg-blue-500' },
-    { title: 'Publicados', value: 0, icon: '✅', color: 'bg-green-500' },
-    { title: 'Usuários', value: 0, icon: '👥', color: 'bg-purple-500' },
-    { title: 'Visualizações', value: 0, icon: '👁️', color: 'bg-orange-500' }
+    { title: 'Total Geral', value: 0, icon: '📊', color: 'bg-slate-500' },
+    { title: 'Tutoriais', value: 0, icon: '📚', color: 'bg-blue-500' },
+    { title: 'Notas de Release', value: 0, icon: '📝', color: 'bg-green-500' },
+    { title: 'Dicas Rápidas', value: 0, icon: '💡', color: 'bg-amber-500' },
+    { title: 'Notícias', value: 0, icon: '📰', color: 'bg-cyan-500' },
+    { title: 'Total Views', value: 0, icon: '👁️', color: 'bg-orange-500' },
+    { title: 'Editores', value: 0, icon: '👥', color: 'bg-purple-500' }
   ]);
 
-  // 3. Atividades Recentes (Mockado para o HTML não dar erro)
   recentActivities = signal([
-    { text: 'Sistema inicializado', time: 'Agora mesmo', type: 'info' },
-    { text: 'Sincronização de dados concluída', time: '5 min atrás', type: 'success' },
-    { text: 'Backup automático realizado', time: '1 hora atrás', type: 'warning' }
+    { text: 'Painel administrativo carregado', time: 'Agora mesmo', type: 'info' },
+    { text: 'Conexão com API estabelecida', time: '5 min atrás', type: 'success' }
   ]);
 
   ngOnInit() {
@@ -47,21 +48,24 @@ export class DashboardComponent implements OnInit {
   loadStats() {
     this.isLoading.set(true);
 
+    // LÓGICA: O 'data' agora segue o contrato da interface DashboardStats do post.model.ts
     this.dashboardService.getStats().subscribe({
-      next: (data) => {
-        // Mapeia o objeto da API para o Array de Cards que o HTML espera
+      next: (data: DashboardStats) => {
         this.stats.set([
-          { title: 'Total Releases', value: data.totalReleases, icon: '📝', color: 'bg-blue-500' },
-          { title: 'Publicados', value: data.publishedReleases, icon: '✅', color: 'bg-green-500' },
-          { title: 'Usuários', value: data.totalUsers, icon: '👥', color: 'bg-purple-500' },
-          { title: 'Visualizações', value: data.totalViews, icon: '👁️', color: 'bg-orange-500' }
+          { title: 'Total Geral', value: data.totalPosts, icon: '📊', color: 'bg-slate-500' },
+          { title: 'Tutoriais', value: data.totalTutorials, icon: '📚', color: 'bg-blue-500' },
+          { title: 'Notas de Release', value: data.totalReleaseNotes, icon: '📝', color: 'bg-green-500' },
+          { title: 'Dicas Rápidas', value: data.totalTips, icon: '💡', color: 'bg-amber-500' },
+          { title: 'Notícias', value: data.totalNews, icon: '📰', color: 'bg-cyan-500' },
+          { title: 'Total Views', value: data.totalViews, icon: '👁️', color: 'bg-orange-500' },
+          { title: 'Editores', value: data.totalUsers, icon: '👥', color: 'bg-purple-500' }
         ]);
 
         this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Erro ao carregar dashboard', err);
-        this.error.set('Não foi possível carregar os dados.');
+        this.error.set('Erro na comunicação com o servidor. Verifique se o backend está rodando.');
         this.isLoading.set(false);
       }
     });

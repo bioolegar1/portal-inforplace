@@ -6,5 +6,5 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UpdateReleaseNoteRequest extends CreateReleaseNoteRequest{
+public class UpdatePostRequest extends CreatePostRequest {
 }

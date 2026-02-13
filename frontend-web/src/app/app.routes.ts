@@ -1,46 +1,45 @@
 import { Routes } from '@angular/router';
-import {authGuard} from './core/guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // =========================================================
-  // 🟢 ÁREA PÚBLICA (Seu site atual)
+  // AREA PUBLICA (Visão do Cliente)
   // =========================================================
 
-  // 1. Capa do Site (Institucional)
   {
     path: '',
     title: 'Inforplace Sistemas',
     loadComponent: () => import('./features/public/home.component').then(m => m.HomeComponent)
   },
 
-  // 2. Hub de Atualizações
+  // Logica: O Hub de postagens substitui ou complementa o antigo releases
   {
-    path: 'releases',
-    title: 'Inforplace Notes - Novidades',
-    loadComponent: () => import('./features/public/release-hub/release-hub.component').then(m => m.ReleaseHubComponent)
+    path: 'posts',
+    title: 'Inforplace - Central de Conteudo',
+    loadComponent: () => import('./features/public/post-hub/post-hub.component').then(m => m.PostHubComponent)
   },
 
-  // 3. Detalhe da Nota
+  // Logica: Rota dinamica usando :slug para carregar o conteudo do banco
   {
-    path: 'releases/:slug',
-    title: 'Detalhes da Atualização',
-    loadComponent: () => import('./features/public/components/release-detail/release-detail.component').then(m => m.ReleaseDetailComponent)
+    path: 'posts/:slug',
+    title: 'Visualizar Postagem',
+    loadComponent: () => import('./features/public/post-detail/post-detail.component').then(m => m.PostDetailComponent)
   },
 
-  // 4. Soluções (Pillar, Safe, Obras, etc...)
+  // Mantendo rotas antigas de soluções
   {
     path: 'pillar',
-    title: 'Sistema Pillar - Gestão de Obras',
+    title: 'Sistema Pillar - Gestao de Obras',
     loadComponent: () => import('./features/public/solutions/pillar/pillar.component').then(m => m.PillarComponent)
   },
   {
     path: 'safe',
-    title: 'Sistema Safe - Gestão Administrativa',
+    title: 'Sistema Safe - Gestao Administrativa',
     loadComponent: () => import('./features/public/solutions/safe/safe.component').then(m => m.SafeComponent)
   },
   {
     path: 'obras',
-    title: 'Custo de Obras - Gestao de Imobiliários',
+    title: 'Custo de Obras - Gestao de Imobiliarios',
     loadComponent: () => import('./features/public/solutions/obras/obras.component').then(m => m.ObrasComponent)
   },
   {
@@ -65,73 +64,61 @@ export const routes: Routes = [
   },
 
   // =========================================================
-  // 🔐 ÁREA ADMINISTRATIVA (Novas Rotas)
+  // AREA ADMINISTRATIVA (Gestao Interna)
   // =========================================================
 
-  // 1. Login (Sem Layout - Tela Cheia)
   {
     path: 'admin/login',
     title: 'Login - Portal Inforplace',
     loadComponent: () => import('./features/admin/login/login.component').then(m => m.LoginComponent)
   },
 
-  // 2. Painel Admin (Com Layout: Sidebar + Header)
   {
     path: 'admin',
-    // Carrega o Layout que segura todas as páginas internas
     loadComponent: () => import('./features/admin/layout/layout.component').then(m => m.AdminLayoutComponent),
-    canActivate: [authGuard], // <--- ADICIONE ESTA LINHA: Protege o admin e todos os filhos
+    canActivate: [authGuard],
     children: [
-      // Se acessar /admin direto, joga para o dashboard
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
-      // Dashboard
       {
         path: 'dashboard',
         title: 'Dashboard - Inforplace',
         loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(m => m.DashboardComponent)
       },
 
-      // Gerenciamento de Releases (Lista)
       {
-        path: 'releases',
-        title: 'Gerenciar Releases',
-        loadComponent: () => import('./features/admin/releases/release-list/release-list.component').then(m => m.ReleaseListComponent)
+        path: 'posts',
+        title: 'Gerenciar Conteudo',
+        loadComponent: () => import('./features/admin/posts/post-list/post-list.component').then(m => m.PostListComponent)
       },
 
-// Editor de Releases (Criar Novo)
       {
-        path: 'releases/new',
-        title: 'Nova Release',
-        loadComponent: () => import('./features/admin/releases/release-editor/release-editor.component').then(m => m.ReleaseEditorComponent)
+        path: 'posts/new',
+        title: 'Novo Conteudo',
+        loadComponent: () => import('./features/admin/posts/post-editor/post-editor.component').then(m => m.PostEditorComponent)
       },
 
-// Editor de Releases (Editar Existente)
       {
-        path: 'releases/:id', // O Angular entende que :id é um parâmetro, então /new é verificado primeiro
-        title: 'Editar Release',
-        loadComponent: () => import('./features/admin/releases/release-editor/release-editor.component').then(m => m.ReleaseEditorComponent)
+        path: 'posts/:id',
+        title: 'Editar Conteudo',
+        loadComponent: () => import('./features/admin/posts/post-editor/post-editor.component').then(m => m.PostEditorComponent)
       },
 
-      // Usuários
       {
         path: 'users',
-        title: 'Gerenciar Usuários',
+        title: 'Gerenciar Usuarios',
         loadComponent: () => import('./features/admin/users/users-list.component').then(m => m.UserListComponent)
       },
 
-      // Configurações
       {
         path: 'settings',
-        title: 'Configurações',
+        title: 'Configuracoes',
         loadComponent: () => import('./features/admin/settings/settings.component').then(m => m.SettingsComponent)
       }
     ]
   },
 
-  // =========================================================
-  // ⚠️ ROTA CORINGA (Sempre por último)
-  // =========================================================
+  // Fallback: Redireciona para a home se a rota nao existir
   {
     path: '**',
     redirectTo: ''

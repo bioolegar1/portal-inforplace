@@ -1,8 +1,8 @@
-import {Component, Input, Output, EventEmitter, signal, inject} from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {BlockType, ContentBlock, AlertType, ComparisonBlock} from '../../../core/models/blocks/content-block.interface';
-import {HttpClient} from '@angular/common/http';
+import { BlockType, ContentBlock, AlertType, ComparisonBlock } from '../../../core/models/blocks/content-block.interface';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-block-manager',
@@ -19,7 +19,6 @@ export class BlockManagerComponent {
   private readonly UPLOAD_API_URL = 'https://localhost:8080/api/uploads';
   private http = inject(HttpClient);
 
-
   @Output() blocksChange = new EventEmitter<ContentBlock[]>();
 
   _blocks = signal<ContentBlock[]>([]);
@@ -27,13 +26,16 @@ export class BlockManagerComponent {
   BlockType = BlockType;
   AlertType = AlertType;
 
+  // Lógica: Expandimos a lista para incluir COMPARISON e TIMELINE que estão na sua pasta de blocos
   availableBlocks = [
-    {type: BlockType.HEADER, label: 'Título', icon: '📝', description: 'Adicione um cabeçalho'},
-    {type: BlockType.TEXT, label: 'Texto', icon: '📄', description: 'Escreva um parágrafo'},
-    {type: BlockType.IMAGE, label: 'Imagem', icon: '🖼️', description: 'Insira uma foto'},
-    {type: BlockType.ALERT, label: 'Aviso', icon: '💡', description: 'Destaque importante'},
-    {type: BlockType.CHECKLIST, label: 'Tarefas', icon: '✓', description: 'Lista de verificação'},
-    {type: BlockType.MODULE_HIGHLIGHT, label: 'Destaque', icon: '⭐', description: 'Card especial'}
+    { type: BlockType.HEADER, label: 'Título', icon: '📝', description: 'Adicione um cabeçalho' },
+    { type: BlockType.TEXT, label: 'Texto', icon: '📄', description: 'Escreva um parágrafo' },
+    { type: BlockType.IMAGE, label: 'Imagem', icon: '🖼️', description: 'Insira uma foto' },
+    { type: BlockType.ALERT, label: 'Aviso', icon: '💡', description: 'Destaque importante' },
+    { type: BlockType.CHECKLIST, label: 'Tarefas', icon: '✓', description: 'Lista de verificação' },
+    { type: BlockType.MODULE_HIGHLIGHT, label: 'Destaque', icon: '⭐', description: 'Card especial' },
+    { type: BlockType.COMPARISON, label: 'Comparação', icon: '↔️', description: 'Antes e Depois' },
+    { type: BlockType.TIMELINE, label: 'Linha do Tempo', icon: '🕒', description: 'Eventos em sequência' }
   ];
 
   showAddMenu = false;
@@ -89,31 +91,22 @@ export class BlockManagerComponent {
   private getInitialDataForType(type: BlockType): any {
     switch (type) {
       case BlockType.HEADER:
-        return {title: '', level: 2};
+        return { title: '', level: 2 };
       case BlockType.TEXT:
-        return {content: ''};
+        return { content: '' };
       case BlockType.ALERT:
-        return {type: AlertType.INFO, title: '', message: ''};
+        return { type: AlertType.INFO, title: '', message: '' };
       case BlockType.CHECKLIST:
-        return {title: 'Lista de Verificação', items: []};
+        return { title: 'Lista de Verificação', items: [] };
       case BlockType.IMAGE:
-        return {url: '', caption: ''};
+        return { url: '', caption: '' };
       case BlockType.MODULE_HIGHLIGHT:
-        return {
-          title: '',
-          subtitle: '',
-          iconUrl: '',
-          variant: 'primary',
-          features: []
-        };
+        return { title: '', subtitle: '', iconUrl: '', variant: 'primary', features: [] };
       case BlockType.COMPARISON:
-        return {
-          imageBefore: '',
-          imageAfter: '',
-          captionBefore: '',
-          captionAfter: '',
-          sliderPosition: 50
-        };
+        return { imageBefore: '', imageAfter: '', captionBefore: '', captionAfter: '', sliderPosition: 50 };
+      // Lógica: Adicionada inicialização para o bloco de TIMELINE
+      case BlockType.TIMELINE:
+        return { title: 'Marcos do Projeto', items: [{ title: '', date: '', description: '' }] };
       default:
         return {};
     }
@@ -143,7 +136,7 @@ export class BlockManagerComponent {
     const block = blocks[blockIndex];
     if (!block.data.items) block.data.items = [];
 
-    block.data.items.push({text: '', checked: false});
+    block.data.items.push({ text: '', checked: false });
     this.updateList(blocks);
   }
 
@@ -171,37 +164,23 @@ export class BlockManagerComponent {
   onUploadImage(event: Event, block: ContentBlock, field: 'imageBefore' | 'imageAfter'): void {
     const input = event.target as HTMLInputElement;
 
-    // Verifica se o usuário realmente selecionou um arquivo
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-
-      // 2. Prepara o arquivo para envio usando FormData
-      // O FormData é essencial para enviar binários (arquivos) como se fosse um formulário HTML nativo
       const formData = new FormData();
-      formData.append('file', file); // 'file' deve ser o mesmo nome que está no @RequestParam do Java
+      formData.append('file', file);
 
-      // 3. Faz a requisição POST ao backend
       this.http.post<{ url: string }>(this.UPLOAD_API_URL, formData).subscribe({
-
         next: (response) => {
-          // 4. Sucesso: O backend salvou e retornou a URL pública
-          // Verificamos se é um bloco de comparação para garantir a tipagem segura
           if (block.type === BlockType.COMPARISON) {
-
-            // Cast forçado (as ComparisonBlock) para o TypeScript aceitar o acesso aos campos específicos
             (block as ComparisonBlock).data[field] = response.url;
-
             console.log(`Sucesso! Imagem salva em: ${field}`, response.url);
           }
         },
-
         error: (err) => {
           console.error('Erro ao fazer upload da imagem:', err);
           alert('Erro ao enviar a imagem. Verifique se o backend está rodando.');
         },
-
         complete: () => {
-          // Limpa o input para permitir que o usuário selecione a mesma imagem novamente se quiser
           input.value = '';
         }
       });
