@@ -85,6 +85,9 @@
                   } @else if (solution.id === 'coletorxml') {
                     <a routerLink="/coletorxml" [ngClass]="getCardTheme(solution.id).btn" class="w-full justify-center px-4 py-2.5 rounded-lg font-bold transition-all shadow-md hover:scale-[1.02] inline-flex items-center gap-2 text-sm">Conhecer o Coletor <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
                   }
+                  @else if (solution.id === 'pillarmobile') {
+                    <a routerLink="/pillarmobile" [ngClass]="getCardTheme(solution.id).btn" class="w-full justify-center px-4 py-2.5 rounded-lg font-bold transition-all shadow-md hover:scale-[1.02] inline-flex items-center gap-2 text-sm">Conhecer o Pillar Mobile <span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+                  }
                   @else {
                     <a href="#solucoes" [ngClass]="getCardTheme(solution.id).btn" class="w-full justify-center px-4 py-2.5 rounded-lg font-bold transition-all shadow-md hover:scale-[1.02] inline-flex items-center gap-2 text-sm">Saiba Mais <span class="material-symbols-outlined text-sm">expand_more</span></a>
                   }

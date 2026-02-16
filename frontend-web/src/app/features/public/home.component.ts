@@ -144,7 +144,17 @@ export class HomeComponent implements OnInit {
         text: 'text-gray-600 text-[10px] md:text-sm group-hover:text-orange-50',
         detail: 'text-orange-600 group-hover:text-white',
         btn: 'bg-orange-600 hover:bg-orange-800 text-white'
+      },
+      'pillarmobile': {
+        card: 'group hover:bg-blue-800 hover:border-blue-800 hover:shadow-blue-950/40 transition-all duration-300',
+        iconBg: 'bg-blue-50 text-blue-600 group-hover:bg-blue-800 group-hover:text-white',
+        title: 'group-hover:text-white',
+        text: 'text-gray-600 text-[10px] md:text-sm group-hover:text-blue-50',
+        detail: 'text-blue-600 group-hover:text-white',
+        btn: 'bg-blue-500 hover:bg-blue-950 text-white'
       }
+
+
     };
 
     return cardThemes[id] || defaultTheme;

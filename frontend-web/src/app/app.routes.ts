@@ -117,6 +117,11 @@ export const routes: Routes = [
       }
     ]
   },
+  {
+    path: 'gerar-boleto', // Lógica: Um nome de rota diferente para nao carregar o SafeComponent
+    title: 'Inforplace - Gerar Boleto',
+    loadComponent: () => import('./features/public/components/safe-wrapper/safe-wrapper.component').then(m => m.SafeWrapperComponent)
+  },
 
   // Fallback: Redireciona para a home se a rota nao existir
   {
