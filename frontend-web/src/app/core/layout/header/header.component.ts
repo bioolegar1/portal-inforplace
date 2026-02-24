@@ -16,13 +16,13 @@ export class HeaderComponent {
 
   // 2. Dados do Menu (Signals)
   solutionsMenu = signal([
+    { name: 'Sistema SAFE', icon: 'safe.png', link: '/safe' },
+    { name: 'Nota Info', icon: 'sao.png', link: '/notainfo' },
     { name: 'Sistema Pillar', icon: 'pillar42x42.png', link: '/pillar' },
     { name: 'Pillar REMOTO', icon: 'pillar42x42.png', link: '/pillarmobile' },
-    { name: 'Sistema SAFE', icon: 'safe.png', link: '/safe' },
+    { name: 'PVInfo - Ponto de Venda', icon: 'pvinfo.png', link: '/pvinfo' },
+    { name: 'Coletor XML', icon: 'Coletorxml.png', link: '/coletorxml' },
     { name: 'Custo de Obras', icon: 'custodeobras.png', link: '/obras' },
-    { name: 'PDV - Ponto de Venda', icon: 'pvinfo.png', link: '/pvinfo' },
-    { name: 'Emissor NF-e', icon: 'sao.png', link: '/notainfo' },
-    { name: 'Coletor XML', icon: 'Coletorxml.png', link: '/coletorxml' }
   ]);
 
   // 3. Funções de Controle

@@ -8,6 +8,10 @@ import { BlockManagerComponent } from '../../../../ui/blocks/block-manager/block
 import { BlockType, ContentBlock } from '../../../../core/models/blocks/content-block.interface';
 import { PostService } from '../../../../core/services/post.service';
 import { PostType, ProductSystem, PostRequest, PostResponse } from '../../../../core/models/post.model';
+import {environment} from '../../../../../environments/environment';
+
+// Importacao do arquivo de ambiente para controle dinamico de URL.
+// Ajuste a quantidade de '../' conforme a profundidade exata desta pasta no seu projeto.
 
 @Component({
   selector: 'app-post-editor',
@@ -20,7 +24,9 @@ export class PostEditorComponent implements OnInit {
   @ViewChild(BlockManagerComponent) blockManager!: BlockManagerComponent;
 
   private http = inject(HttpClient);
-  private readonly UPLOAD_API_URL = 'https://localhost:8080/api/uploads';
+
+  // Lógica de Correção: A variavel agora e montada dinamicamente lendo o ambiente ativo.
+  private readonly UPLOAD_API_URL = `${environment.apiUrl}/uploads`;
 
   form: FormGroup;
   blocks = signal<ContentBlock[]>([]);
@@ -101,7 +107,6 @@ export class PostEditorComponent implements OnInit {
 
     this.isLoading.set(true);
 
-    // Lógica: Criamos o objeto postData unindo os dados do formulário com os blocos
     const postData: PostRequest = {
       ...this.form.value,
       contentBlocks: this.blocks()

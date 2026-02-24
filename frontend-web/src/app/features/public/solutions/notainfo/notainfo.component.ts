@@ -1,7 +1,7 @@
 import {Component, OnInit, signal, ChangeDetectionStrategy, ElementRef, ViewChild} from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
-import { RouterLink } from '@angular/router';
+
 
 // Certifique-se que os caminhos estão corretos na sua estrutura
 import { CtaContactComponent } from '../../../../core/layout/cta-contact/cta-contact.component';
@@ -23,7 +23,6 @@ export interface FeatureItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    NgOptimizedImage,
     CtaContactComponent,
     LatestUpdatesComponent,
     TestimonialsComponent,

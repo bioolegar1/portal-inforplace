@@ -6,7 +6,9 @@ export enum BlockType {
   CHECKLIST = 'CHECKLIST',
   MODULE_HIGHLIGHT = 'MODULE_HIGHLIGHT',
   ALERT = 'ALERT',
-  TIMELINE = 'TIMELINE'
+  TIMELINE = 'TIMELINE',
+  YOUTUBE = 'YOUTUBE' // <-- Adicione esta linha
+
 }
 
 export enum AlertType {
@@ -77,6 +79,8 @@ export interface ChecklistBlock extends ContentBlock {
   };
 }
 
+
+
 export interface ModuleHighlightBlock extends ContentBlock {
   type: BlockType.MODULE_HIGHLIGHT;
   data: {
@@ -114,6 +118,16 @@ export interface TimelineBlock extends ContentBlock {
   };
 }
 
+
+
+export interface YoutubeBlock extends ContentBlock {
+  type: BlockType.YOUTUBE;
+  data: {
+    videoUrl: string;
+    title?: string;
+  };
+}
+
 export function isHeaderBlock(block: ContentBlock): block is HeaderBlock {
   return block.type === BlockType.HEADER;
 }
@@ -144,4 +158,8 @@ export function isAlertBlock(block: ContentBlock): block is AlertBlock {
 
 export function isTimelineBlock(block: ContentBlock): block is TimelineBlock {
   return block.type === BlockType.TIMELINE;
+}
+
+export function isYoutubeBlock(block: ContentBlock): block is YoutubeBlock {
+  return block.type === BlockType.YOUTUBE;
 }

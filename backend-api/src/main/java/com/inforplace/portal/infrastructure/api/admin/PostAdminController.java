@@ -20,7 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/admin/posts")
+// Lógica: Prefixo "/api" removido. O Nginx cuida disso e entrega a rota limpa.
+@RequestMapping("/admin/posts")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN') or hasRole('EDITOR')")
 @SecurityRequirement(name = "bearer-jwt")
@@ -35,14 +36,12 @@ public class PostAdminController {
             @RequestParam(required = false) Boolean published,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        // Se published for false, retorna rascunhos. Se for true, publicados. Se null, todos.
         Page<PostResponse> posts = postService.findAll(published, pageable);
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/stats")
     public ResponseEntity<DashboardStatsResponse> getStats() {
-        // Lógica: Quando o Angular pedir /stats, chamamos o serviço e devolvemos 200 OK
         return ResponseEntity.ok(postService.getDashboardStats());
     }
 

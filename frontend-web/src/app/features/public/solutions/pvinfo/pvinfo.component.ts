@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 
 import { CtaContactComponent } from '../../../../core/layout/cta-contact/cta-contact.component';
@@ -15,7 +15,6 @@ import {HeroSolutionComponent} from '../../../../core/layout/hero-solution/hero-
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    NgOptimizedImage,
     CtaContactComponent,
     LatestUpdatesComponent,
     TestimonialsComponent,

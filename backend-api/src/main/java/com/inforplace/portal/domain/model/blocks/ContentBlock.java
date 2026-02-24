@@ -18,7 +18,8 @@ import com.inforplace.portal.domain.enums.BlockType;
         @JsonSubTypes.Type(value = ChecklistBlock.class, name = "CHECKLIST"),
         @JsonSubTypes.Type(value = ModuleHighlightBlock.class, name = "MODULE_HIGHLIGHT"),
         @JsonSubTypes.Type(value = AlertBlock.class, name = "ALERT"),
-        @JsonSubTypes.Type(value = TimelineBlock.class, name = "TIMELINE")
+        @JsonSubTypes.Type(value = TimelineBlock.class, name = "TIMELINE"),
+        @JsonSubTypes.Type(value = YoutubeBlock.class, name = "YOUTUBE")
 })
 public interface ContentBlock {
     String getId();

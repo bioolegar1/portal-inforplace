@@ -1,6 +1,5 @@
 package com.inforplace.portal.infrastructure.api.auth;
 
-
 import com.inforplace.portal.application.dtos.request.LoginRequest;
 import com.inforplace.portal.application.dtos.request.RegisterRequest;
 import com.inforplace.portal.application.dtos.response.LoginResponse;
@@ -15,7 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+// Lógica: Removido o "/api" para alinhar com o Nginx que faz o "strip prefix"
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication", description = "Endpoints de autenticação")
 public class AuthController {
@@ -30,7 +30,6 @@ public class AuthController {
 
     @GetMapping("/gerar-senha/{senha}")
     public ResponseEntity<String> gerarSenha(@PathVariable String senha) {
-        // Isso usa o mesmo encoder que o login usa, eliminando erro de versão
         String hash = new BCryptPasswordEncoder().encode(senha);
         return ResponseEntity.ok(hash);
     }

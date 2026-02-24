@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    # Lógica: O host foi ajustado de ':5432' para 'postgres:5432' para ter um fallback seguro,
+    # embora o Docker Compose vá sobrescrever isso com a variável de ambiente.
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/portal_inforplace_prod}
+    username: ${DB_USER:admininfo}
+    password: ${DB_PASSWORD:neoinf@123}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+  mail:
+    host: mail.inforplace.com.br
+    port: 465
+    username: site@inforplace.com.br
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+
+app:
+  upload:
+    dir: /app/uploads
+    # Lógica: Quando a API salvar um arquivo, ela precisa devolver uma URL para o Front-end.
+    # Essa URL deve ser a pública passando pelo Nginx (/api/), e não localhost,
+    # senão as imagens quebrarem no navegador do usuário final.
+    url-base: ${UPLOAD_URL_BASE:http://192.168.40.43/api/uploads}
+
+  cors:
+    # Lógica: Adicionado o IP da rede local para que o Angular consiga fazer requisições sem bloqueio de CORS.
+    allowed-origins: http://localhost, http://localhost:4200, http://192.168.40.43, https://seudominio.com.br
+
+  mail:
+    destinos:
+      comercial: "comercial@inforplace.com.br"
+      financeiro: "financeiro@inforplace.com.br"
+      suporte: "suporte@inforplace.com.br"
+      outro: "contato@inforplace.com.br"
+
+server:
+  port: 8080
+  # O SSL foi removido daqui também, pois o ambiente inteiro confia no Nginx para isso.
+
+springdoc:
+  swagger-ui:
+    url: /v3/api-docs

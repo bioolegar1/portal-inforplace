@@ -13,12 +13,12 @@ export const serverRoutes: ServerRoute[] = [
   // Sem isso, o build falha ao tentar extrair rotas para o Prerender.
   {
     path: 'posts/:slug',
-    renderMode: RenderMode.Prerender,
+    renderMode: RenderMode.Server,
   },
 
   // Lógica: Rota padrão para as demais páginas do site.
   {
     path: '**',
-    renderMode: RenderMode.Prerender,
+    renderMode: RenderMode.Server,
   },
 ];

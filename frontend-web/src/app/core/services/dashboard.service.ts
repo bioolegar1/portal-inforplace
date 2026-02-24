@@ -1,20 +1,27 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
+// Importacao do arquivo de ambiente para controle dinamico de URL
+
 // IMPORTANTE: Importamos o que criamos no model
 import {
   CreatePostRequest,
   UpdatePostRequest,
   PostResponse,
-  DashboardStats, PostRequest
+  DashboardStats,
+  PostRequest
 } from '../models/post.model';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
   private http = inject(HttpClient);
-  private readonly API_URL = 'https://localhost:8080/api/admin/posts';
+
+  // A variavel API_URL agora e montada unindo a base do ambiente com o endpoint especifico
+  private readonly API_URL = `${environment.apiUrl}/admin/posts`;
 
   getStats(): Observable<DashboardStats> {
     return this.http.get<DashboardStats>(`${this.API_URL}/stats`);

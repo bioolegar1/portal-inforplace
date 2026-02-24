@@ -4,7 +4,7 @@ import com.inforplace.portal.application.dtos.response.PostListResponse;
 import com.inforplace.portal.application.dtos.response.PostResponse;
 import com.inforplace.portal.application.services.PostService;
 import com.inforplace.portal.domain.enums.PostType;
-import com.inforplace.portal.domain.enums.ProductSystem; // Import do novo Enum
+import com.inforplace.portal.domain.enums.ProductSystem;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/public/posts")
+// Lógica: Removido o "/api" para alinhar com o strip-prefix do Nginx
+@RequestMapping("/public/posts")
 @RequiredArgsConstructor
 @Tag(name = "Public Content", description = "Endpoints públicos para visualização de tutoriais e releases")
 public class PostPubController {
@@ -29,13 +30,11 @@ public class PostPubController {
             description = "Retorna uma lista paginada filtrada por tipo e sistema (Pillar, Safe, etc)")
     public ResponseEntity<Page<PostListResponse>> listPublished(
             @RequestParam(required = false) PostType type,
-            @RequestParam(required = false) ProductSystem system, // Adicionado para o filtro por software
-            @RequestParam(required = false) String category, // 1. Recebemos a categoria da URL aqui
-            @PageableDefault(sort = "publishedAt", direction = Sort.Direction.DESC) Pageable pageable //mostra 10 por pagina
-
+            @RequestParam(required = false) ProductSystem system,
+            @RequestParam(required = false) String category,
+            @PageableDefault(sort = "publishedAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        // RESOLUÇÃO: Agora passamos os 3 arguments que o Service espera: type, system e pageable
-        Page<PostListResponse> posts = postService.findAllPublished(type, system,category, pageable);
+        Page<PostListResponse> posts = postService.findAllPublished(type, system, category, pageable);
         return ResponseEntity.ok(posts);
     }
 
@@ -52,15 +51,10 @@ public class PostPubController {
         return ResponseEntity.ok(post);
   }
 
-
-
     @PostMapping("/{slug}/view")
     @Operation(summary = "Registrar visualização", description = "Incrementa o contador de visualizações com trava por IP")
     public ResponseEntity<Void> incrementViewCount(@PathVariable String slug, HttpServletRequest request) {
-        // Captura o IP de quem chamou a API
         String userIp = request.getRemoteAddr();
-
-        // Passa o IP para o Service avaliar
         postService.incrementViewCount(slug, userIp);
 
         return ResponseEntity.noContent().build();

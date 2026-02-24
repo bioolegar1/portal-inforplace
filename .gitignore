@@ -25,4 +25,6 @@ frontend-web/.angular/
 
 # Uploads
 uploads/
-backups/
+backups
+#variaveis do front
+frontend-web/src/environments

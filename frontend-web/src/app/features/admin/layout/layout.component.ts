@@ -27,10 +27,7 @@ export class AdminLayoutComponent implements OnInit {
 
   menuItems: MenuItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/admin/dashboard' },
-    // Alterado de 'Releases' para 'Conteúdo' para englobar Tutoriais, Dicas e News
     { label: 'Conteúdo', icon: 'content', route: '/admin/posts', badge: 0 },
-    { label: 'Usuários', icon: 'users', route: '/admin/users' },
-    { label: 'Configurações', icon: 'settings', route: '/admin/settings' }
   ];
 
   constructor(

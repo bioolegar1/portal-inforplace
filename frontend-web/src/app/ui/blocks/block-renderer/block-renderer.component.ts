@@ -10,6 +10,7 @@ import { ChecklistBlockComponent } from '../checklist-block/checklist-block.comp
 import { ModuleHighlightBlockComponent } from '../module-highlight-block/module-highlight-block.component';
 import { AlertBlockComponent } from '../alert-block/alert-block.component';
 import { TimelineBlockComponent } from '../timeline-block/timeline-block.component';
+import {YoutubeBlockComponent} from '../youtube-block/youtube-block.component';
 
 @Component({
   selector: 'app-block-renderer',
@@ -23,13 +24,14 @@ import { TimelineBlockComponent } from '../timeline-block/timeline-block.compone
     ChecklistBlockComponent,
     ModuleHighlightBlockComponent,
     AlertBlockComponent,
-    TimelineBlockComponent
+    TimelineBlockComponent,
+    YoutubeBlockComponent
   ],
   template: `
     <div class="block-renderer space-y-8">
       @for (block of sortedBlocks; track block.id) {
-        <div 
-          class="block-wrapper" 
+        <div
+          class="block-wrapper"
           [attr.data-block-type]="block.type"
           [style.animation-delay]="($index * 50) + 'ms'"
         >
@@ -58,6 +60,9 @@ import { TimelineBlockComponent } from '../timeline-block/timeline-block.compone
             @case (BlockType.TIMELINE) {
               <app-timeline-block [data]="block.data" />
             }
+            @case (BlockType.YOUTUBE) {
+              <app-youtube-block [data]="block.data"></app-youtube-block>
+            }
             @default {
               <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p class="text-red-800 font-medium">
@@ -68,7 +73,7 @@ import { TimelineBlockComponent } from '../timeline-block/timeline-block.compone
           }
         </div>
       }
-      
+
       @if (blocks.length === 0) {
         <div class="text-center py-16 text-gray-500">
           <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,7 +89,7 @@ import { TimelineBlockComponent } from '../timeline-block/timeline-block.compone
       opacity: 0;
       animation: fadeIn 0.6s ease-in-out forwards;
     }
-    
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -99,9 +104,9 @@ import { TimelineBlockComponent } from '../timeline-block/timeline-block.compone
 })
 export class BlockRendererComponent {
   @Input() blocks: ContentBlock[] = [];
-  
+
   BlockType = BlockType;
-  
+
   get sortedBlocks(): ContentBlock[] {
     return [...this.blocks].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   }

@@ -1,26 +1,32 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withInMemoryScrolling } from '@angular/router'; // 1. Importe o withInMemoryScrolling
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
-import {errorInterceptor} from './core/interceptors/error.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // Otimização de detecção de mudanças
     provideZoneChangeDetection({ eventCoalescing: true }),
 
-    // 2. Configure o Router com as opções de scroll
+    // Configuração de Rotas com restauração de scroll para o topo
     provideRouter(
       routes,
       withInMemoryScrolling({
-        scrollPositionRestoration: 'top', // Força a página a rolar para o topo na navegação
-        anchorScrolling: 'enabled'        // Permite usar links com âncora (ex: #contato) com scroll suave
+        scrollPositionRestoration: 'top',
+        anchorScrolling: 'enabled'
       })
     ),
 
+    // Habilita as animações do Angular que instalamos
+    provideAnimationsAsync(),
+    // Suporte a Server Side Rendering (SSR)
     provideClientHydration(),
 
+    // Configuração do cliente HTTP com interceptadores de autenticação e erro
     provideHttpClient(
       withFetch(),
       withInterceptors([authInterceptor, errorInterceptor])

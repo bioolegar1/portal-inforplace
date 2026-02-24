@@ -62,6 +62,19 @@ export const routes: Routes = [
     title: 'Pillar Mobile',
     loadComponent:()=> import('./features/public/solutions/pillar-mobile/pillar-mobile.component').then(m => m.PillarMobileComponent)
   },
+  {
+    path: 'institucional',
+    loadComponent: () => import('./features/public/components/institucional/institucional.component')
+      .then(m => m.InstitucionalComponent),
+    title: 'Institucional - Inforplace' // Opcional: define o título da aba do navegador
+  },
+
+  {
+    path: 'fale-conosco',
+    loadComponent: () => import('./features/public/components/fale-conosco/fale-conosco.component')
+      .then(m => m.FaleConoscoComponent),
+    title: 'Institucional - Inforplace' // Opcional: define o título da aba do navegador
+  },
 
   // =========================================================
   // AREA ADMINISTRATIVA (Gestao Interna)

@@ -1,6 +1,5 @@
 package com.inforplace.portal.infrastructure.api.admin;
 
-
 import com.inforplace.portal.application.services.FileStorageUseCase;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/uploads")
-@SecurityRequirement(name ="bearerAuth")
+// Lógica: Removido o "/api". Agora o Java escuta exatamente o que o Nginx entrega.
+@RequestMapping("/uploads")
+@SecurityRequirement(name ="bearerAuth") // Nota: Verifique se no Swagger o nome configurado é bearerAuth ou bearer-jwt como no PostAdminController
 public class UploadController {
 
     private final FileStorageUseCase fileStorageUseCase;

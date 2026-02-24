@@ -49,11 +49,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Lógica: Utiliza o Bean CorsConfigurationSource que você definiu no CorsConfig.java
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // Lógica: Tratamento de exceções para evitar erros genéricos na cadeia de filtros
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -64,21 +62,24 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
-                        // Lógica: Permissões públicas para o site e documentação
-                        .requestMatchers("/api/auth/**").permitAll()
+                        // Lógica: Rotas sem o prefixo /api, pois o Nginx limpa a URL antes de entregar ao Java
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/error", "/favicon.ico", "/").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/public/**").permitAll()
 
-                        // Lógica: Endpoint de visualizações deve ser acessível sem token
-                        .requestMatchers(HttpMethod.POST, "/api/public/posts/*/view").permitAll()
+                        // Lógica: Endpoint de visualizações sem prefixo /api
+                        .requestMatchers(HttpMethod.POST, "/public/posts/*/view").permitAll()
 
-                        .requestMatchers("/api/hello", "/api/status").permitAll()
+                        // Lógica: Bate exatamente com o @RequestMapping("/v1/apiemail") do seu Controller
+                        .requestMatchers("/v1/apiemail/**").permitAll()
+
+                        .requestMatchers("/hello", "/status").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
 
-                        // Lógica: Proteção das rotas de edição para Admin/Editor
-                        .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_EDITOR", "ADMIN", "EDITOR")
+                        // Lógica: Rotas administrativas protegidas
+                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_EDITOR", "ADMIN", "EDITOR")
 
                         .anyRequest().authenticated()
                 )

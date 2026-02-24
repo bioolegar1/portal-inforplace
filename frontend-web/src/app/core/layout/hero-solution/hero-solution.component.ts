@@ -1,5 +1,5 @@
 import { Component, input, signal, output, computed } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 // Estrutura para cada slide do Hero
 export interface HeroImage {
@@ -10,7 +10,7 @@ export interface HeroImage {
 @Component({
   selector: 'app-hero-solution',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage],
+  imports: [CommonModule],
   templateUrl: './hero-solution.component.html'
 })
 export class HeroSolutionComponent {

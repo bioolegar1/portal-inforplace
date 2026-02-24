@@ -57,15 +57,10 @@ app:
 
   upload:
     dir: ${UPLOAD_DIR:./uploads}
-    # ALTERADO: URL base agora utiliza HTTPS para evitar erro de Mixed Content no navegador
-    url-base: ${UPLOAD_URL_BASE:https://localhost:8080/uploads}
-    upload:
-      # AQUI ESTÁ A CONFIGURAÇÃO CORRETA
-      # O './' garante que a pasta seja criada na raiz do projeto onde o JAR/Java está rodando
+    url-base: ${UPLOAD_URL_BASE:http://localhost:8080/uploads}
 
   cors:
-    # ALTERADO: Adicionado suporte a origens HTTPS para o Angular/React
-    allowed-origins: ${CORS_ORIGINS:https://localhost:4200,https://localhost:3000, http://localhost:4200,https://localhost:4200}
+    allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
 
 logging:
   level:
@@ -74,14 +69,9 @@ logging:
     org.flywaydb: DEBUG
 
 server:
-  # ALTERADO: Porta 8443 é o padrão comum para HTTPS em desenvolvimento Spring
   port: ${SERVER_PORT:8080}
 
-  # NOVO: Configurações de SSL
-  ssl:
-    enabled: true
-    # O arquivo keystore deve estar na pasta src/main/resources
-    key-store: ${SSL_KEYSTORE:classpath:keystore.p12}
-    key-store-password: ${SSL_KEYSTORE_PASSWORD:sua_senha}
-    key-store-type: PKCS12
-    key-alias: ${SSL_KEY_ALIAS:tomcat}
+  # Lógica: Comunica ao Spring Boot que ele está atrás de um Proxy (Nginx).
+  # Isso faz o Java ler aqueles cabeçalhos "X-Forwarded-Proto" que colocamos no nginx.conf,
+  # garantindo que o Swagger e os redirecionamentos funcionem com o IP/Domínio real, e não com 'localhost'.
+  forward-headers-strategy: framework

@@ -1,16 +1,19 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http'; // ✅ Adicionado HttpParams
+import { HttpClient, HttpParams } from '@angular/common/http'; // Adicionado HttpParams
 import { Observable } from 'rxjs';
+import { environment } from "../../../environments/environment";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  protected baseUrl = 'https://localhost:8080/api';
+  // A base URL agora e dinamica, puxando a configuracao do arquivo de environment ativo.
+  protected baseUrl = environment.apiUrl;
 
   protected http = inject(HttpClient);
 
-  // ✅ CORREÇÃO: Adicionado 'params?' como segundo argumento opcional
+  // CORRECAO: Adicionado 'params?' como segundo argumento opcional
   protected get<T>(url: string, params?: HttpParams): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}${url}`, { params });
   }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BlockType, ContentBlock, AlertType, ComparisonBlock } from '../../../core/models/blocks/content-block.interface';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-block-manager',
@@ -16,7 +17,8 @@ export class BlockManagerComponent {
     this._blocks.set(value);
   }
 
-  private readonly UPLOAD_API_URL = 'https://localhost:8080/api/uploads';
+  // Lógica: Trocamos o localhost fixo pela base dinâmica do environment
+  private readonly UPLOAD_API_URL = `${environment.apiUrl}/uploads`;
   private http = inject(HttpClient);
 
   @Output() blocksChange = new EventEmitter<ContentBlock[]>();
@@ -26,7 +28,6 @@ export class BlockManagerComponent {
   BlockType = BlockType;
   AlertType = AlertType;
 
-  // Lógica: Expandimos a lista para incluir COMPARISON e TIMELINE que estão na sua pasta de blocos
   availableBlocks = [
     { type: BlockType.HEADER, label: 'Título', icon: '📝', description: 'Adicione um cabeçalho' },
     { type: BlockType.TEXT, label: 'Texto', icon: '📄', description: 'Escreva um parágrafo' },
@@ -35,14 +36,34 @@ export class BlockManagerComponent {
     { type: BlockType.CHECKLIST, label: 'Tarefas', icon: '✓', description: 'Lista de verificação' },
     { type: BlockType.MODULE_HIGHLIGHT, label: 'Destaque', icon: '⭐', description: 'Card especial' },
     { type: BlockType.COMPARISON, label: 'Comparação', icon: '↔️', description: 'Antes e Depois' },
-    { type: BlockType.TIMELINE, label: 'Linha do Tempo', icon: '🕒', description: 'Eventos em sequência' }
+    { type: BlockType.TIMELINE, label: 'Linha do Tempo', icon: '🕒', description: 'Eventos em sequência' },
+    { type: BlockType.YOUTUBE, label: 'Vídeo YouTube', icon: '▶️', description: 'Incorpore um vídeo' }
   ];
 
   showAddMenu = false;
 
+  // Lógica: Fallback de segurança. Se o navegador bloquear o crypto.randomUUID (por não ter HTTPS),
+  // o try-catch captura o erro e usamos matemática nativa para gerar um ID único.
+  private generateSafeUUID(): string {
+    try {
+      if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+      }
+    } catch (e) {
+      console.warn('crypto.randomUUID não disponível (falta HTTPS?), usando fallback matemático.');
+    }
+
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
   addBlock(type: BlockType) {
     const newBlock: ContentBlock = {
-      id: crypto.randomUUID(),
+      // Lógica: Chamamos a nova função que garante a criação do ID sem quebrar a tela
+      id: this.generateSafeUUID(),
       type: type,
       order: this._blocks().length,
       data: this.getInitialDataForType(type)
@@ -73,7 +94,8 @@ export class BlockManagerComponent {
     const blockToDuplicate = blocks[index];
     const duplicatedBlock: ContentBlock = {
       ...blockToDuplicate,
-      id: crypto.randomUUID(),
+      // Lógica: A mesma segurança aplicada na duplicação
+      id: this.generateSafeUUID(),
       order: index + 1,
       data: JSON.parse(JSON.stringify(blockToDuplicate.data))
     };
@@ -104,9 +126,10 @@ export class BlockManagerComponent {
         return { title: '', subtitle: '', iconUrl: '', variant: 'primary', features: [] };
       case BlockType.COMPARISON:
         return { imageBefore: '', imageAfter: '', captionBefore: '', captionAfter: '', sliderPosition: 50 };
-      // Lógica: Adicionada inicialização para o bloco de TIMELINE
       case BlockType.TIMELINE:
         return { title: 'Marcos do Projeto', items: [{ title: '', date: '', description: '' }] };
+      case BlockType.YOUTUBE:
+        return { videoUrl: '', title: '' };
       default:
         return {};
     }
@@ -161,7 +184,9 @@ export class BlockManagerComponent {
     imgElement.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23f3f4f6" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%239ca3af" font-size="14"%3EErro ao carregar imagem%3C/text%3E%3C/svg%3E';
   }
 
-  onUploadImage(event: Event, block: ContentBlock, field: 'imageBefore' | 'imageAfter'): void {
+
+// Logica: O parametro 'field' agora e opcional. Se nao for passado, assumimos que e um bloco IMAGE comum.
+  onUploadImage(event: Event, block: ContentBlock, field?: 'imageBefore' | 'imageAfter'): void {
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
@@ -169,19 +194,24 @@ export class BlockManagerComponent {
       const formData = new FormData();
       formData.append('file', file);
 
+      // Logica: Reutiliza a URL de upload que ja configuramos com o environment
       this.http.post<{ url: string }>(this.UPLOAD_API_URL, formData).subscribe({
         next: (response) => {
-          if (block.type === BlockType.COMPARISON) {
+          if (block.type === BlockType.COMPARISON && field) {
+            // Logica: Se for COMPARISON, salva no campo especifico (antes ou depois)
             (block as ComparisonBlock).data[field] = response.url;
-            console.log(`Sucesso! Imagem salva em: ${field}`, response.url);
+          } else {
+            // Logica: Se for um bloco IMAGE comum, salva diretamente na url do data
+            block.data.url = response.url;
           }
+          console.log('Upload concluido com sucesso:', response.url);
         },
         error: (err) => {
-          console.error('Erro ao fazer upload da imagem:', err);
-          alert('Erro ao enviar a imagem. Verifique se o backend está rodando.');
+          console.error('Erro no upload:', err);
+          alert('Nao foi possivel carregar a imagem do seu computador.');
         },
         complete: () => {
-          input.value = '';
+          input.value = ''; // Limpa o input para permitir o mesmo arquivo novamente
         }
       });
     }

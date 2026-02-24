@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 
 // Componentes Filhos
@@ -31,7 +31,6 @@ export interface FeaturesItem {
   `],
   imports: [
     CommonModule,
-    NgOptimizedImage,
     CtaContactComponent,
     LatestUpdatesComponent,
     TestimonialsComponent,

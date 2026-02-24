@@ -2,10 +2,9 @@ import { Injectable, inject, signal, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-import { isPlatformBrowser } from '@angular/common'; // Importante para SSR
-
-// Ajuste para a URL do seu backend
-const API_URL = 'https://localhost:8080/api/auth';
+import { isPlatformBrowser } from '@angular/common';
+// Lógica: Importamos o environment para pegar a base da URL dinamicamente
+import { environment } from '../../../environments/environment'; // Ajuste este caminho conforme a pasta do seu projeto
 
 interface LoginResponse {
   token: string;
@@ -22,33 +21,31 @@ interface LoginResponse {
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private platformId = inject(PLATFORM_ID); // Identifica se é Server ou Browser
+  private platformId = inject(PLATFORM_ID);
 
-  // Estado reativo do usuário (acessível em toda a app)
+  // Lógica: A URL base vem do ambiente + o caminho específico deste serviço
+  private readonly API_URL = `${environment.apiUrl}/auth`;
+
   currentUser = signal<any>(null);
 
   constructor() {
-    // Ao iniciar, verifica se já tem usuário salvo no localStorage
     this.tryAutoLogin();
   }
 
   login(credentials: any): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${API_URL}/login`, credentials).pipe(
+    // A concatenação aqui resultará em ambiente.apiUrl/auth/login
+    return this.http.post<LoginResponse>(`${this.API_URL}/login`, credentials).pipe(
       tap(response => {
-        // Só salva no localStorage se estiver no navegador
         if (isPlatformBrowser(this.platformId)) {
           localStorage.setItem('token', response.token);
           localStorage.setItem('user', JSON.stringify(response.user));
         }
-
-        // Atualiza o sinal para a interface reagir
         this.currentUser.set(response.user);
       })
     );
   }
 
   logout() {
-    // Só tenta limpar se estiver no navegador
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
@@ -58,7 +55,6 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    // Se for servidor, nunca está autenticado (para evitar erro)
     if (isPlatformBrowser(this.platformId)) {
       return !!localStorage.getItem('token');
     }
@@ -73,7 +69,6 @@ export class AuthService {
   }
 
   private tryAutoLogin() {
-    // CORREÇÃO DO ERRO: Verifica se é navegador antes de acessar localStorage
     if (isPlatformBrowser(this.platformId)) {
       const user = localStorage.getItem('user');
       const token = localStorage.getItem('token');

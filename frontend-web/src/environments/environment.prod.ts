@@ -1,6 +1,6 @@
-// src/environments/environment.prod.ts
-
 export const environment = {
   production: true,
-  apiUrl: 'https://portal.inforplace.com.br/api'
+  apiUrl: '/api',
+  apiEmail: '/api/v1/apiemail',
+  apiAdmin: '/api/admin'
 };

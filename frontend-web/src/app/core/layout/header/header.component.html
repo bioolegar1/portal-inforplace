@@ -33,8 +33,9 @@
         </div>
       </div>
 
-      <a routerLink="/" fragment="institucional" class="hover:text-green-100 transition-colors opacity-90 hover:opacity-100">Institucional</a>
-      <a routerLink="/" fragment="fale-conosco" class="hover:text-green-100 transition-colors opacity-90 hover:opacity-100">Fale Conosco</a>
+      <a routerLink="/institucional" class="hover:text-green-100 transition-colors opacity-90 hover:opacity-100">Institucional</a>
+
+      <a routerLink="/fale-conosco" class="hover:text-green-100 transition-colors opacity-90 hover:opacity-100">Fale conosco</a>
     </nav>
 
     <div class="flex items-center gap-4">
@@ -100,14 +101,15 @@
           }
         </div>
 
-        <a routerLink="/" fragment="institucional" (click)="closeMenu()" class="text-lg font-bold hover:text-[#16a34a] border-b border-gray-100 pb-3">Institucional</a>
+        <a routerLink="/institucional" (click)="closeMenu()" class="text-lg font-bold hover:text-[#16a34a] border-b border-gray-100 pb-3">Institucional</a>
+
         <a routerLink="/" fragment="fale-conosco" (click)="closeMenu()" class="text-lg font-bold hover:text-[#16a34a] border-b border-gray-100 pb-3">Fale Conosco</a>
 
         <a routerLink="/boleto" (click)="closeMenu()" class="flex sm:hidden items-center gap-2 text-[#1e40af] font-bold py-2">
           <span class="material-symbols-outlined">qr_code_2</span> Gerar Boleto
         </a>
 
-        <a routerLink="/releases" (click)="closeMenu()" class="flex items-center gap-2 text-green-700 font-bold py-2">
+        <a routerLink="/posts" (click)="closeMenu()" class="flex items-center gap-2 text-green-700 font-bold py-2">
           <span class="material-symbols-outlined">campaign</span> Novidades
         </a>
 

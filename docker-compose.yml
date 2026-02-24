@@ -1,38 +1,79 @@
-version: '3.8'
+version: '3.9'
 
 services:
   postgres:
     image: postgres:16-alpine
     container_name: inforplace-db
     restart: unless-stopped
+    env_file: .env
     environment:
-      POSTGRES_DB: ${DB_NAME:-portal_inforplace_dev}
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - inforplace-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   api:
-    # AQUI ESTÁ A MUDANÇA: Indicamos a pasta do backend
-    build: 
+    build:
       context: ./backend-api
       dockerfile: Dockerfile
     container_name: portal-inforplace-api
-    restart: always
-    ports:
-      - "8080:8080"
+    restart: unless-stopped
+    env_file: .env
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-portal_inforplace_dev}
-      - SPRING_DATASOURCE_USERNAME=${DB_USER:-postgres}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-postgres}
-      - SPRING_PROFILES_ACTIVE=dev
-      - JWT_SECRET=wcdIjgaHYz8GnVdEDyJGwLkj/FAx14BcveW33wz0BzE=
+      - SPRING_PROFILES_ACTIVE=prod
+      # Lógica: Força o Spring Boot a usar o container vizinho 'postgres'
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      # Lógica: Obriga o Flyway a usar a mesma URL do DataSource principal
+      - SPRING_FLYWAY_URL=jdbc:postgresql://postgres:5432/${DB_NAME}
+      - SPRING_FLYWAY_USER=${DB_USER}
+      - SPRING_FLYWAY_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    networks:
+      - inforplace-network
+    volumes:
+      - ./uploads:/app/uploads
+
+  frontend:
+      build:
+        context: ./frontend-web
+        dockerfile: Dockerfile
+      container_name: portal-inforplace-frontend
+      restart: unless-stopped
+      env_file: .env
+      depends_on:
+        - api
+      networks:
+        - inforplace-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: portal-inforplace-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - frontend
+      - api
     networks:
       - inforplace-network
 

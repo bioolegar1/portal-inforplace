@@ -2,7 +2,6 @@ import { Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/cor
 import {CommonModule} from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { TestimonialsComponent } from '../../../../core/layout/testmonials/testmonials.component';
-import {RouterLink} from '@angular/router';
 import {CtaContactComponent} from '../../../../core/layout/cta-contact/cta-contact.component';
 import {LatestUpdatesComponent} from '../../components/latest-updates/latest-updates.component';
 import {FaqAccordionComponent} from '../../../../core/layout/faq-accordion/faq-accordion.component';
@@ -27,7 +26,6 @@ interface FaqItem {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule,
-    RouterLink,
     CtaContactComponent,
     LatestUpdatesComponent,
     TestimonialsComponent,

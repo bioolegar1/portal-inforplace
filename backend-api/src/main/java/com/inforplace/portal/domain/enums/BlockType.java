@@ -8,5 +8,6 @@ public enum BlockType {
     CHECKLIST,
     MODULE_HIGHLIGHT,
     ALERT,
-    TIMELINE
+    TIMELINE,
+    YOUTUBE
 }

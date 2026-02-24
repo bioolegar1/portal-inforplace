@@ -14,8 +14,8 @@ import {
   providedIn: 'root'
 })
 export class ReleaseService extends ApiService {
-  private apiUrl = 'https://localhost:8080/api/admin/releases';
-  private publicUrl = 'https://localhost:8080/api/public/releases';
+  private apiUrl = 'http://localhost:8080/api/admin/releases';
+  private publicUrl = 'http://localhost:8080/api/public/releases';
 
   // ========== ENDPOINTS PÚBLICOS ==========
 

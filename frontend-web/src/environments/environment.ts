@@ -1,6 +1,6 @@
-// src/environments/environment.ts
-
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:8080/api'
+  apiUrl: 'http://localhost:8080',
+  apiEmail: 'http://localhost:8080/v1/apiemail',
+  apiAdmin: 'http://localhost:8080/admin'
 };
